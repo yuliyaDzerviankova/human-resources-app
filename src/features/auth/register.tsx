@@ -1,0 +1,73 @@
+import React from "react"
+import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Text, Tooltip } from "@chakra-ui/react"
+import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
+
+type User = {
+  username: string
+  password: string
+}
+
+export const Register = () => {
+  const navigate = useNavigate()
+  const loginSchema = z.object({
+    username: z.string().nonempty({ message: "Пожалуйста введите логин" }),
+    password: z.string().nonempty({ message: "Пожалуйста введите пароль" }),
+  })
+
+  const { register, handleSubmit, formState: { errors } } = useForm<User>({
+    resolver: zodResolver(loginSchema)
+  })
+
+  const auth = (data: User) => {
+    console.log(data)
+    navigate("/home")
+
+  }
+
+  return (
+    <Stack flex={1} p={4} justifyContent="start" align="center">
+      <Flex height="40vh" align="center" justify="center">
+        <Heading textAlign="center" my={14} fontSize="60px">Human Resource</Heading>
+      </Flex>
+
+      <Flex
+        align="center"
+        justify="center"
+        bg="hookers_green"
+        borderRadius={10}
+        py={10}
+        px={14}
+
+      >
+        <Stack spacing={4} direction="column" as="form" onSubmit={handleSubmit(auth)}>
+          <FormControl>
+            <Flex direction="column">
+              <FormLabel mb={2} color="ash_gray">Логин</FormLabel>
+              <Tooltip label={errors.username?.message} placement="left" hasArrow>
+                <Input placeholder="Введите логин" {...register("username")} />
+              </Tooltip>
+            </Flex>
+          </FormControl>
+
+          <FormControl>
+            <Flex direction="column">
+              <FormLabel mb={2} color="ash_gray">Пароль</FormLabel>
+              <Tooltip label={errors.password?.message} hasArrow placement="left">
+                <Input placeholder="Введите пароль" {...register("password")} />
+              </Tooltip>
+            </Flex>
+          </FormControl>
+
+          <Flex align="center" direction="column">
+            <Button type="submit" width="100%">Зарегистрироваться</Button>
+            <Text color="ash_gray" textAlign="center" my={4}>или</Text>
+            <Link onClick={() => navigate("/")} textDecoration="underline">Войти</Link>
+          </Flex>
+        </Stack>
+      </Flex>
+    </Stack>
+  )
+}

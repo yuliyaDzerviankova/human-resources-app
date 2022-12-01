@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react"
+import { useRoutes } from "react-router-dom"
+import { Flex, useColorMode } from '@chakra-ui/react'
+import { Login } from "./features/auth/login"
+import { Home } from "./components/home/Home"
+import { Register } from "./features/auth/register"
+import { AddEmployee } from "./features/auth/employees/AddEmployee"
 
-function App() {
+const App = () => {
+  const { setColorMode } = useColorMode()
+
+  useEffect(() => setColorMode("light"), [])
+
+  const routes = useRoutes([
+    { path: "/", element: <Login /> },
+    { path: "/register", element: <Register /> },
+    { path: "/home", element: <Home /> },
+    { path: "/addEmployee", element: <AddEmployee /> },
+  ])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Flex flex={1} maxH="100vh" minH="100vh" width="100%" background="ash_gray">
+      {routes}
+    </Flex>
+  )
 }
 
-export default App;
+export default App
