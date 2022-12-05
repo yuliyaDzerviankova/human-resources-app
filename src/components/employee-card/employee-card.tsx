@@ -1,15 +1,10 @@
 import {
-  Button,
-  Flex,
-  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -17,13 +12,11 @@ import {
   Tabs,
   Text
 } from "@chakra-ui/react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPrint } from "@fortawesome/free-solid-svg-icons"
 import React from "react"
-import { Employee } from "../home/Home"
 import { Family } from "./family"
 import { Education } from "./education"
 import { GeneralInfo } from "./general-info"
+import { Employee } from "../../models"
 
 type EmployeeCardProps = {
   isOpen: boolean
@@ -36,19 +29,21 @@ export const EmployeeCard: React.FC<EmployeeCardProps> = ({ isOpen, onClose, emp
     <Modal isOpen={isOpen} onClose={onClose} size="5xl" isCentered>
       <ModalOverlay />
       <ModalContent bg="ash_gray" borderRadius={20}>
-        <ModalHeader></ModalHeader>
+        <ModalHeader display="flex" alignItems="center" justifyContent="space-between" pr="3.5rem" fontSize="18px" pt={5}>
+          <Text fontWeight="normal" px={6}>Личный номер сотрудника: {employee.id}</Text>
+        </ModalHeader>
         <ModalCloseButton />
 
         <ModalBody px={10} minHeight="35rem">
           <Tabs>
             <TabList>
-              <Tab>Общие данные</Tab>
-              <Tab>Образование</Tab>
-              <Tab>Семья</Tab>
+              <Tab fontSize="20px">Общие данные</Tab>
+              <Tab fontSize="20px">Образование</Tab>
+              <Tab fontSize="20px">Состав семьи</Tab>
             </TabList>
 
             <TabPanels>
-              <TabPanel>
+              <TabPanel height="54vh">
                 <GeneralInfo employee={employee} />
               </TabPanel>
 
@@ -62,12 +57,6 @@ export const EmployeeCard: React.FC<EmployeeCardProps> = ({ isOpen, onClose, emp
             </TabPanels>
           </Tabs>
         </ModalBody>
-
-        <ModalFooter>
-          <Flex align="center" flex={1} justify="flex-end">
-            <Button leftIcon={<FontAwesomeIcon icon={faPrint} />}>Печать личной карточки</Button>
-          </Flex>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   )

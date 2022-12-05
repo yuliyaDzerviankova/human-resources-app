@@ -14,13 +14,9 @@ import {
 import { useNavigate } from "react-router-dom"
 import { EmployeeCard } from "../employee-card/employee-card"
 import { EmployeesView } from "../../features/auth/employees/EmployeesView"
-
-export type Employee = {
-  id: string
-  surname: string
-  firstName: string
-  patronymic: string
-}
+import { Employee } from "../../models"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faUser, faSignOut } from "@fortawesome/free-solid-svg-icons"
 
 export const Home = () => {
   const navigate = useNavigate()
@@ -35,24 +31,29 @@ export const Home = () => {
   return (
     <Stack flex={1} alignItems="center">
       <Flex align="center" justify="flex-end" width="100%" p={4} bg="charcoal">
+        <FontAwesomeIcon icon={faUser} color="#CAD2C5" />
         <Text
+          display="flex"
+          alignItems="center"
+          ml={2}
           color="ash_gray"
-          fontSize="20px"
+          fontSize="14px"
           pr={5}
-          borderRightWidth={1}
-          borderRightColor="ahs_gray"
         >
           Test
         </Text>
-        <Link onClick={() => navigate("/")} color="ash_gray" fontSize="20px" ml={5}>Выйти</Link>
+        <Link onClick={() => navigate("/")} fontSize="14px" ml={5} display="flex" alignItems="center">
+          <FontAwesomeIcon icon={faSignOut} color="#CAD2C5" />
+          <Text ml={2} color="ash_gray">Выйти</Text>
+        </Link>
       </Flex>
 
-      <Tabs width="70%">
+      <Tabs width="80%">
         <TabList mt={6}>
-          <Tab fontSize="20px">Сотрудники</Tab>
-          <Tab fontSize="20px">Приказы</Tab>
-          <Tab fontSize="20px">Штатное расписание</Tab>
-          <Tab fontSize="20px">Уволенные сотрудники</Tab>
+          <Tab fontSize="18px">Сотрудники</Tab>
+          <Tab fontSize="18px">Приказы</Tab>
+          <Tab fontSize="18px">Штатное расписание</Tab>
+          <Tab fontSize="18px">Уволенные сотрудники</Tab>
         </TabList>
 
         <TabPanels>

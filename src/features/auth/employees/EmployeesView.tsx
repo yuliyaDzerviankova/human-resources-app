@@ -1,7 +1,7 @@
 import { Box, Flex, Button, TableContainer, Table, Thead, Tr, Th, Tbody, Td } from "@chakra-ui/react"
 import React, { Dispatch, SetStateAction } from "react"
 import { useNavigate } from "react-router-dom"
-import { Employee } from "../../../components/home/Home"
+import { Employee } from "../../../models"
 
 type EmployeesViewProps = {
   onOpen:() => void
@@ -12,11 +12,22 @@ type EmployeesViewProps = {
 export const EmployeesView: React.FC<EmployeesViewProps> = ({ onOpen, onClose, setEmployee }) => {
   const navigate = useNavigate()
   const employees: Employee[] = [
-    { id: "1", surname: "Денисова", firstName: "Анастасия", patronymic: "Валерьевна" },
-    { id: "2", surname: "Воробьева", firstName: "Светлана", patronymic: "Владимировна" },
-    { id: "3", surname: "Игнатов", firstName: "Владислав", patronymic: "Сергеевич" },
-    { id: "4", surname: "Коваленко", firstName: "Анастасия", patronymic: "Сергеевна" },
-    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна" },
+    { id: "1", surname: "Денисова", firstName: "Анастасия", patronymic: "Валерьевна" , department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2020" },
+    { id: "2", surname: "Воробьева", firstName: "Светлана", patronymic: "Владимировна", department: "Разработки", position: "Фронтенд разработчик", offerDate: "23.02.2019" },
+    { id: "3", surname: "Игнатов", firstName: "Владислав", patronymic: "Сергеевич", department: "Рекрутинга", position: "Рекрутер", offerDate: "02.03.2018" },
+    { id: "4", surname: "Коваленко", firstName: "Анастасия", patronymic: "Сергеевна",department: "Кадров", position: "Проектный менеджер", offerDate: "02.01.2021" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
+    { id: "5", surname: "Северик", firstName: "Инга", patronymic: "Игоревна", department: "Тестирования", position: "Тестировщик ПО", offerDate: "02.12.2019" },
   ]
 
   return (
@@ -27,13 +38,48 @@ export const EmployeesView: React.FC<EmployeesViewProps> = ({ onOpen, onClose, s
 
       <Box p={4} />
 
-      <TableContainer display="flex" justifyContent="center" fontSize="20px">
+      <TableContainer
+        display="flex"
+        justifyContent="center"
+        fontSize="20px"
+        maxHeight="60vh"
+        overflowY="auto"
+        sx={{
+          "&::-webkit-scrollbar": {
+            width: "10px",
+          },
+          "&::-webkit-scrollbar-track": {
+            width: "6px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "dark_sea_green",
+            background: "dark_sea_green",
+            borderRadius: "10px",
+          },
+          "&::-webkit-scrollbar:horizontal": {
+            height: "10px",
+          },
+          "::-webkit-scrollbar-thumb:horizontal": {
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "dark_sea_green",
+            background: "dark_sea_green",
+            borderRadius: "10px",
+          }
+        }}
+        // css=
+      >
         <Table>
           <Thead>
             <Tr>
-              <Th borderColor="dark_sea_green" fontSize="20px">Фамилия</Th>
-              <Th borderColor="dark_sea_green" fontSize="20px">Имя</Th>
-              <Th borderColor="dark_sea_green" fontSize="20px">Отчество</Th>
+              <Th borderColor="dark_sea_green" fontSize="18px">Фамилия</Th>
+              <Th borderColor="dark_sea_green" fontSize="18px">Имя</Th>
+              <Th borderColor="dark_sea_green" fontSize="18px">Отчество</Th>
+              <Th borderColor="dark_sea_green" fontSize="18px">Отдел</Th>
+              <Th borderColor="dark_sea_green" fontSize="18px">Должность</Th>
+              <Th borderColor="dark_sea_green" fontSize="18px">Дата приема на работу</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -46,13 +92,16 @@ export const EmployeesView: React.FC<EmployeesViewProps> = ({ onOpen, onClose, s
                     onOpen()
                   }}
                   _hover={{
-                    bg: "dark_sea_green",
+                    bg: "hookers_green",
                     cursor: "pointer",
                   }}
                 >
-                  <Td borderColor="dark_sea_green">{employee.surname}</Td>
-                  <Td borderColor="dark_sea_green">{employee.firstName}</Td>
-                  <Td borderColor="dark_sea_green">{employee.patronymic}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.surname}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.firstName}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.patronymic}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.department}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.position}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.offerDate}</Td>
                 </Tr>
               )
             })}

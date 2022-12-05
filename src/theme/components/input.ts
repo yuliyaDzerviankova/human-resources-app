@@ -2,6 +2,7 @@ export const baseStyle = {
   field: {
     bg: "white",
     borderColor: "brown",
+    height: "44px",
   }
 }
 

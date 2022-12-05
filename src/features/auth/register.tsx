@@ -1,7 +1,7 @@
 import React from "react"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Text, Tooltip } from "@chakra-ui/react"
+import { Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Tooltip } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 
@@ -39,10 +39,10 @@ export const Register = () => {
         bg="hookers_green"
         borderRadius={10}
         py={10}
-        px={14}
-
+        px={10}
+        width="25rem"
       >
-        <Stack spacing={4} direction="column" as="form" onSubmit={handleSubmit(auth)}>
+        <Stack spacing={5} direction="column" as="form" onSubmit={handleSubmit(auth)} flex={1}>
           <FormControl>
             <Flex direction="column">
               <FormLabel mb={2} color="ash_gray">Логин</FormLabel>
@@ -52,7 +52,7 @@ export const Register = () => {
             </Flex>
           </FormControl>
 
-          <FormControl>
+          <FormControl mb={6}>
             <Flex direction="column">
               <FormLabel mb={2} color="ash_gray">Пароль</FormLabel>
               <Tooltip label={errors.password?.message} hasArrow placement="left">
@@ -61,10 +61,9 @@ export const Register = () => {
             </Flex>
           </FormControl>
 
-          <Flex align="center" direction="column">
-            <Button type="submit" width="100%">Зарегистрироваться</Button>
-            <Text color="ash_gray" textAlign="center" my={4}>или</Text>
+          <Flex align="center" justify="space-between">
             <Link onClick={() => navigate("/")} textDecoration="underline">Войти</Link>
+            <Button type="submit" height="44px">Зарегистрироваться</Button>
           </Flex>
         </Stack>
       </Flex>

@@ -1,6 +1,6 @@
-import { Stack, Flex, Text, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 import React from "react"
-import { Employee } from "../home/Home"
+import { Employee } from "../../models"
 
 type EducationProos = {
   employee: Employee
