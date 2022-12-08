@@ -1,5 +1,5 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons"
-import { Flex, Heading, Button } from "@chakra-ui/react"
+import { Flex, Heading } from "@chakra-ui/react"
 import React from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 

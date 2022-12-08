@@ -8,6 +8,7 @@ export type FormFieldProps<FieldValues = any> = {
   name: Path<FieldValues> | null
   // @ts-ignore
   register?: UseFormRegister<FieldValues>
+  controlWidth?: string
 }
 
 export const FormField = <T, > ({
@@ -16,9 +17,10 @@ export const FormField = <T, > ({
   tootlipLabel,
   register,
   children,
+  controlWidth = "100%",
 }: PropsWithChildren<FormFieldProps<T>>) => {
   return (
-    <FormControl>
+    <FormControl width={controlWidth}>
     <Flex direction="column">
       <FormLabel mb={2} color="charcoal">{label}</FormLabel>
       <Tooltip label={tootlipLabel} placement="left" hasArrow>

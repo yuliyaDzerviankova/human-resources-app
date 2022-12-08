@@ -11,7 +11,8 @@ export const Tabs = {
           bg: "dark_sea_green",
         },
         _selected: {
-          color: "dark_slate_gray",
+          background: "dark_slate_gray",
+          color: "ash_gray",
           borderBottomColor: "dark_slate_gray",
         }
       }

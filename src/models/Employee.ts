@@ -3,11 +3,17 @@ export type Employee = {
   surname: string
   firstName: string
   patronymic: string
-  bDay?: string
-  mobPhone?: string
-  homePhone?: string
-  fK_StaffingTable?: number
-  department?: string
-  position?: string
-  offerDate?: string
+  bDay: string
+  birthPlace: string
+  mobPhone: string
+  homePhone: string
+  passportNumber: string
+  dateReceipt: string
+  placeReceipt: string
+  passportAddress: string
+  actualAddress: string
+  nationality: string
+  department: string
+  position: string
+  offerDate: string
 }

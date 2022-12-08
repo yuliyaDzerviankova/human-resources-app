@@ -4,22 +4,24 @@ import { Flex, useColorMode } from '@chakra-ui/react'
 import { Login } from "./features/auth/login"
 import { Home } from "./components/home/Home"
 import { Register } from "./features/auth/register"
-import { AddEmployee } from "./features/auth/employees/AddEmployee"
+import { EmployeeChanges } from "./features/employees/EmployeeChanges"
 
 const App = () => {
   const { setColorMode } = useColorMode()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setColorMode("light"), [])
 
   const routes = useRoutes([
     { path: "/", element: <Login /> },
     { path: "/register", element: <Register /> },
     { path: "/home", element: <Home /> },
-    { path: "/addEmployee", element: <AddEmployee /> },
+    { path: "/addEmployee", element: <EmployeeChanges /> },
+    { path: "/editEmployee/:id", element: <EmployeeChanges /> },
   ])
 
   return (
-    <Flex flex={1} maxH="100vh" minH="100vh" width="100%" background="ash_gray">
+    <Flex flex={1} height="100%" minH="100vh" width="100%" background="ash_gray">
       {routes}
     </Flex>
   )

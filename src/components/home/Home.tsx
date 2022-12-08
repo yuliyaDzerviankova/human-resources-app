@@ -13,10 +13,13 @@ import {
 } from "@chakra-ui/react"
 import { useNavigate } from "react-router-dom"
 import { EmployeeCard } from "../employee-card/employee-card"
-import { EmployeesView } from "../../features/auth/employees/EmployeesView"
+import { EmployeesView } from "../../features/employees/EmployeesView"
 import { Employee } from "../../models"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUser, faSignOut } from "@fortawesome/free-solid-svg-icons"
+import { StaffingTableView } from "../../features/staffing-table/StaffingTableView"
+import { FiredEmployeesView } from "../../features/fired-empoyees/FiredEmployeesView"
+import { OrdersView } from "../../features/orders/OrdersView"
 
 export const Home = () => {
   const navigate = useNavigate()
@@ -25,6 +28,19 @@ export const Home = () => {
     surname: "",
     firstName: "",
     patronymic: "",
+    bDay: "",
+    birthPlace: "",
+    mobPhone: "",
+    homePhone: "",
+    passportNumber: "",
+    dateReceipt: "",
+    placeReceipt: "",
+    passportAddress: "",
+    actualAddress: "",
+    nationality: "",
+    department: "",
+    position: "",
+    offerDate: ""
   })
   const { isOpen, onClose, onOpen } = useDisclosure()
 
@@ -40,20 +56,23 @@ export const Home = () => {
           fontSize="14px"
           pr={5}
         >
-          Test
+          Admin
         </Text>
-        <Link onClick={() => navigate("/")} fontSize="14px" ml={5} display="flex" alignItems="center">
+        <Link _hover={{ textDecoration: "underline", textDecorationColor: "ash_gray" }} onClick={() => navigate("/")} fontSize="14px" ml={5} display="flex" alignItems="center">
           <FontAwesomeIcon icon={faSignOut} color="#CAD2C5" />
           <Text ml={2} color="ash_gray">Выйти</Text>
         </Link>
       </Flex>
 
-      <Tabs width="80%">
-        <TabList mt={6}>
-          <Tab fontSize="18px">Сотрудники</Tab>
-          <Tab fontSize="18px">Приказы</Tab>
-          <Tab fontSize="18px">Штатное расписание</Tab>
-          <Tab fontSize="18px">Уволенные сотрудники</Tab>
+      <Tabs width="90%">
+        <TabList mt={6} justifyContent="space-between" borderBottomColor="dark_sea_green">
+          <Flex>
+            <Tab fontSize="18px">Сотрудники</Tab>
+            <Tab fontSize="18px">Приказы</Tab>
+            <Tab fontSize="18px">Штатное расписание</Tab>
+            <Tab fontSize="18px">Уволенные сотрудники</Tab>
+          </Flex>
+          <Tab fontSize="18px" justifySelf="flex-end">Админ</Tab>
         </TabList>
 
         <TabPanels>
@@ -62,15 +81,19 @@ export const Home = () => {
           </TabPanel>
 
           <TabPanel mt={10}>
-            <Text>Приказы</Text>
+            <OrdersView />
           </TabPanel>
 
           <TabPanel mt={10}>
-            <Text>Штатное расписание</Text>
+            <StaffingTableView />
           </TabPanel>
 
           <TabPanel mt={10}>
-            <Text>Уволенные сотрудники</Text>
+            <FiredEmployeesView />
+          </TabPanel>
+
+          <TabPanel justifySelf="flex-end">
+            <Text>Админы</Text>
           </TabPanel>
         </TabPanels>
       </Tabs>

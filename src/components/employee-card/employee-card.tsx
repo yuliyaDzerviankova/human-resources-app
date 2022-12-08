@@ -26,7 +26,7 @@ type EmployeeCardProps = {
 
 export const EmployeeCard: React.FC<EmployeeCardProps> = ({ isOpen, onClose, employee }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="5xl" isCentered>
+    <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
       <ModalOverlay />
       <ModalContent bg="ash_gray" borderRadius={20}>
         <ModalHeader display="flex" alignItems="center" justifyContent="space-between" pr="3.5rem" fontSize="18px" pt={5}>
@@ -36,7 +36,7 @@ export const EmployeeCard: React.FC<EmployeeCardProps> = ({ isOpen, onClose, emp
 
         <ModalBody px={10} minHeight="35rem">
           <Tabs>
-            <TabList>
+            <TabList borderBottomColor="dark_sea_green">
               <Tab fontSize="20px">Общие данные</Tab>
               <Tab fontSize="20px">Образование</Tab>
               <Tab fontSize="20px">Состав семьи</Tab>
@@ -47,11 +47,11 @@ export const EmployeeCard: React.FC<EmployeeCardProps> = ({ isOpen, onClose, emp
                 <GeneralInfo employee={employee} />
               </TabPanel>
 
-              <TabPanel>
+              <TabPanel height="54vh">
                 <Education employee={employee} />
               </TabPanel>
 
-              <TabPanel>
+              <TabPanel height="54vh">
                 <Family />
               </TabPanel>
             </TabPanels>

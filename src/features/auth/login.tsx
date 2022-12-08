@@ -1,7 +1,7 @@
 import React from "react"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Tooltip } from "@chakra-ui/react"
+import { Alert, AlertDescription, Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Tooltip } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 
@@ -36,17 +36,21 @@ export const Login = () => {
       <Flex
         align="center"
         justify="center"
+        direction="column"
         bg="hookers_green"
         borderRadius={10}
         py={10}
         px={10}
         width="25rem"
-
       >
-        <Stack spacing={5} direction="column" as="form" onSubmit={handleSubmit(auth)} flex={1}>
+        <Alert variant="error" mb={4}>
+          <AlertDescription>Логин и/или пароль не совпадают</AlertDescription>
+        </Alert>
+
+        <Stack spacing={5} direction="column" as="form" width="90%" onSubmit={handleSubmit(auth)} flex={1}>
           <FormControl>
             <Flex direction="column">
-              <FormLabel mb={2} color="ash_gray">Логин</FormLabel>
+              <FormLabel>Логин</FormLabel>
               <Tooltip label={errors.username?.message} placement="left" hasArrow>
                 <Input {...register("username")} placeholder="Введите логин" />
               </Tooltip>
@@ -55,9 +59,9 @@ export const Login = () => {
 
           <FormControl mb={6}>
             <Flex direction="column">
-              <FormLabel mb={2} color="ash_gray">Пароль</FormLabel>
+              <FormLabel>Пароль</FormLabel>
               <Tooltip label={errors.password?.message} hasArrow placement="left">
-                <Input {...register("password")} placeholder="Введите пароль" />
+                <Input {...register("password")} placeholder="Введите пароль" type="password" />
               </Tooltip>
             </Flex>
           </FormControl>
