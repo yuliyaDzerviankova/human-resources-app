@@ -33,55 +33,55 @@ export const GeneralInfo: React.FC<GeneralInfoProps> = ({ employee }) => {
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Дата рождения:</Text>
-            <Text>16/09/2000</Text>
+            <Text>{employee.bDay}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Место рождения:</Text>
-            <Text>г. Гомель</Text>
+            <Text>{employee.birthPlace}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Мобильный номер:</Text>
-            <Text>+375447282024</Text>
+            <Text>{employee.mobPhone}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Домашний номер:</Text>
-            <Text>+375232311779</Text>
+            <Text>{employee.homePhone}</Text>
           </Flex>
         </Stack>
 
         <Stack spacing={6} width="50%">
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Паспорт:</Text>
-            <Text>HB2589765</Text>
+            <Text>{employee.passportNumber}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Кем выдан:</Text>
-            <Text>Железнодорожное РОВД</Text>
+            <Text>{employee.placeReceipt}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Когда выдан:</Text>
-            <Text>16/09/2016</Text>
+            <Text>{employee.dateReceipt}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Адрес прописки:</Text>
-            <Text>г. Гомель, ул. Жемчужная 22/3</Text>
+            <Text>{employee.passportAddress}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Адрес проживания:</Text>
             {/* <Text textAlign="right">{("г. Гомель, ул. Жемчужная 22/3").slice(0, 20)}</Text> */}
-            <Text textAlign="right">г. Гомель, ул. Жемчужная 22/3</Text>
+            <Text textAlign="right">{employee.actualAddress}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Гражданство:</Text>
-            <Text>Беларусь</Text>
+            <Text>{employee.nationality}</Text>
           </Flex>
         </Stack>
       </Stack>

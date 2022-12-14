@@ -1,9 +1,17 @@
-import { Button, Flex, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { Button, Flex, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
 import { faPrint } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
+import { FamilyChangesModal } from "../../features/employees/FamilyChangesModal"
+import { Employee } from "../../models"
 
-export const Family = () => {
+type FamilyProps = {
+  employee: Employee
+}
+
+export const Family: React.FC<FamilyProps> = ({ employee }) => {
+  const { isOpen: isFamilyOpen, onOpen: onFamilyOpen, onClose: onFamilyClose } = useDisclosure()
+
   return (
     <Stack flex={1} height="100%">
       <TableContainer>
@@ -29,10 +37,15 @@ export const Family = () => {
 
       <Flex flex={1} align="flex-end" justify="space-between" width="100%">
         <Flex align="center">
-          <Button>Добавить члена семьи</Button>
+          <Button onClick={onFamilyOpen}>Добавить члена семьи</Button>
         </Flex>
         <Button leftIcon={<FontAwesomeIcon icon={faPrint} />}>Печать личной карточки</Button>
       </Flex>
+      <FamilyChangesModal
+        employee={employee}
+        isFamilyOpen={isFamilyOpen}
+        onFamilyClose={onFamilyClose}
+      />
     </Stack>
   )
 }

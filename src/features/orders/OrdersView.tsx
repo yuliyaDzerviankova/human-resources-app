@@ -13,15 +13,9 @@ import {
 } from "@chakra-ui/react"
 import { faEllipsisVertical, faAdd } from "@fortawesome/free-solid-svg-icons"
 import { Menu } from "../../components"
+import { orders } from "../../mocks/orders"
 
 export const OrdersView = () => {
-  const orders = [
-    { id: "1", type: "Приказ о принятии на работу нового сотрудника", dateOrder: "12/11/2020", info: "" },
-    { id: "2", type: "Приказ об увольнения сотрудника", dateOrder: "12/11/2020", info: "" },
-    { id: "3", type: "Приказ о смене должности", dateOrder: "12/11/2020", info: "" },
-    { id: "4", type: "Приказ о добавлении штатной единицы", dateOrder: "12/11/2020", info: "" },
-  ]
-
   const orderTypes = [
     { id: "1", type: "Приказ о принятии на работу нового сотрудника" },
     { id: "2", type: "Приказ об увольнения сотрудника" },

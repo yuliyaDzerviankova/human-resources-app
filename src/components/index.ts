@@ -1,5 +1,5 @@
 export * from "./employee-card/education"
-export * from "./employee-card/employee-card"
+export * from "./employee-card/employeeCardModal"
 export * from "./employee-card/family"
 export * from "./employee-card/general-info"
 export * from "./form-field/form-field"

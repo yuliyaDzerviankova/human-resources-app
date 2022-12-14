@@ -14,7 +14,7 @@ export type FormFieldProps<FieldValues = any> = {
 export const FormField = <T, > ({
   name,
   label,
-  tootlipLabel,
+  tootlipLabel = "",
   register,
   children,
   controlWidth = "100%",

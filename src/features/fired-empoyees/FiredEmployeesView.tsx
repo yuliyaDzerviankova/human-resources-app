@@ -9,16 +9,9 @@ import {
   Td,
 } from "@chakra-ui/react"
 import React from "react"
+import { firedEmployees } from "../../mocks/firedEmployees"
 
 export const FiredEmployeesView = () => {
-  const firedEmployees = [
-    { id: "1", fio: "Иванов Петр Степанович", reason: "По истечению контракта" },
-    { id: "2", fio: "Захарова Ангелина Вячеславовна", reason: "По собственному желанию" },
-    { id: "3", fio: "Котов Михаил Александрович", reason: "По статье" },
-    { id: "4", fio: "Михальчук Мария Павловна", reason: "За систему нарушений" },
-    { id: "5", fio: "Орешкина Есения Аркадьевна", reason: "В связи с выходом нового работника" },
-  ]
-
   return (
     <>
       <Box p={4} />

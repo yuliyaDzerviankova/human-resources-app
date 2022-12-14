@@ -13,7 +13,7 @@ export type Employee = {
   passportAddress: string
   actualAddress: string
   nationality: string
-  department: string
-  position: string
+  department: { id: string, name: string }
+  position: { id: string, name: string }
   offerDate: string
 }

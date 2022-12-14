@@ -13,6 +13,6 @@ root.render(
   <BrowserRouter>
     <ChakraProvider theme={theme}>
         <App />
-      </ChakraProvider>
+    </ChakraProvider>
   </BrowserRouter>
 )

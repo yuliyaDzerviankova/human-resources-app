@@ -1,4 +1,4 @@
-import { Button, Flex, Input, Select, Stack, Text, VStack } from "@chakra-ui/react"
+import { Button, Flex, Input, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, Stack, Text, useDisclosure, VStack } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { FormField } from "../../components/form-field/form-field"
@@ -9,43 +9,32 @@ import { Employee } from "../../models"
 import * as z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { EducationChangesModal } from "./EducationChangesModal"
+import { Toaster } from "react-hot-toast"
+import { initEmployee } from "../../mocks/initialModels/initEmployee"
+import { PopToast } from "../../components/toaster/Toaster"
 
 export const EmployeeChanges = () => {
   const params = useParams()
   const navigate = useNavigate()
   const data = moment().format("DD/MM/YYYY")
-  const [employee, setEmployee] = useState<Employee>({
-    id: "",
-    surname: "",
-    firstName: "",
-    patronymic: "",
-    bDay: "",
-    birthPlace: "",
-    mobPhone: "",
-    homePhone: "",
-    passportNumber: "",
-    dateReceipt: "",
-    placeReceipt: "",
-    passportAddress: "",
-    actualAddress: "",
-    nationality: "",
-    department: "",
-    position: "",
-    offerDate: "",
-  })
+  const [isEdit, setIsEdit] = useState(false)
+  const { isOpen: isEducationOpen, onOpen: onEducationOpen, onClose: onEducationClose } = useDisclosure()
+  const [employee, setEmployee] = useState<Employee>(initEmployee)
 
   useEffect(() => {
-    const employee = employees.find((employee) => employee.id === params.id) as Employee
-    setEmployee(employee)
+    if (params.id) {
+      const employee = employees.find((employee) => employee.id === params.id) as Employee
+      setEmployee(employee)
+      setIsEdit(true)
+    }
   }, [params.id])
 
-  console.log(employee)
-
   const schema = z.object({
-    surname: z.string(),
+    surname: z.string().nonempty(),
     firstName: z.string(),
     patronymic: z.string(),
-    bDay: z.string(),
+    bDay: z.string().refine((val) => moment().diff(val, "years") >= 18 && moment().diff(val, "years") < 63, { message: "Возраст может быть от 18 до 63 лет" }),
     birthPlace: z.string(),
     mobPhone: z.string(),
     homePhone: z.string(),
@@ -93,6 +82,7 @@ export const EmployeeChanges = () => {
 
   useEffect(() => {
     if (params.id && employee) {
+      setIsEdit(true)
       setValue("firstName", employee.firstName)
       setValue("surname", employee.surname)
       setValue("patronymic", employee.patronymic)
@@ -116,12 +106,11 @@ export const EmployeeChanges = () => {
   return (
     <VStack align="start" p={4} flex={1}>
       <PageHeader
-      title="Изменить сотрудника"
-        // title={`${params.id ? "Добавить" : "Изменить"} сотрудника`}
+        title={!isEdit ? "Добавить сотрудника" : `Изменить сотрудника ${employee.surname}`}
       />
       <Flex width="100%" align="center" justify="flex-end" pr={4}>
         <Text fontWeight="bold" mr={4}>Дата приёма на работу: </Text>
-        <Text>{params.id ? employee.offerDate : data}</Text>
+        <Text>{isEdit ? employee.offerDate : data}</Text>
       </Flex>
       <Flex flex={1} p={4} width="100%" justifyContent="space-between">
         <Stack spacing={4} width="45%">
@@ -155,15 +144,15 @@ export const EmployeeChanges = () => {
           <FormField<Employee>
             label="Дата Рождения"
             name="bDay"
-            tootlipLabel=""
+            tootlipLabel={errors.bDay?.message || ""}
             {...formFieldProps}
           >
-            <Input />
+            <Input type="date" />
           </FormField>
 
           <FormField<Employee>
             label="Место Рождения"
-            name="bDay"
+            name="birthPlace"
             tootlipLabel=""
             {...formFieldProps}
           >
@@ -205,7 +194,7 @@ export const EmployeeChanges = () => {
             tootlipLabel=""
             {...formFieldProps}
           >
-            <Input />
+            <Input type="date" />
           </FormField>
           
           <FormField<Employee>
@@ -250,7 +239,7 @@ export const EmployeeChanges = () => {
             tootlipLabel=""
             {...formFieldProps}
           >
-            <Select disabled background="ash_grey" borderColor="#353535">
+            <Select background="ash_grey" borderColor="#353535">
               <option>Тестирования</option>
               <option>Разработки</option>
             </Select>
@@ -263,7 +252,7 @@ export const EmployeeChanges = () => {
             {...formFieldProps}
           >
             <Select background="ash_grey" borderColor="#353535">
-              <option selected>Тестировщик</option>
+              <option>Тестировщик</option>
               <option>Разработчик</option>
             </Select>
           </FormField>
@@ -271,14 +260,60 @@ export const EmployeeChanges = () => {
 
       </Flex>
 
-      <Flex align="center" gridGap="48px" justify="flex-start" p={4}>
-        <Button disabled={isInvalid}>
-          Далее
-        </Button>
+      <Flex align="center" justify="space-between" p={4} width="100%">
         <Button onClick={() => navigate("/home")}>
           Отменить
         </Button>
+        <Popover placement="left-start">
+          <PopoverTrigger>
+            <Button
+              disabled={isInvalid}
+            >
+              {isEdit ? "Изменить" : "Далее"}
+          </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverBody display="flex" flexDirection="column">
+              <Text mb={6}>Вы уверены, что хотите добавить сотрудника?</Text>
+              <Flex flex={1} align="center" justify="space-between">
+                <Button onClick={() => navigate("/home")}>Нет</Button>
+                <Button
+                  onClick={() => {
+                    PopToast("Toast", "created", "success")
+                    // onEducationOpen()
+                    // employeeToast()
+                  }}
+                >
+                  Да
+                </Button>
+              </Flex>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       </Flex>
+      <EducationChangesModal
+        isEducationOpen={isEducationOpen}
+        onEducationClose={onEducationClose}
+        employee={employee}
+      />
+      <Toaster
+        position="top-right"
+        containerStyle={{}}
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: "green",
+            color: "white",
+          },
+          success: {
+            style: {
+              background: "green",
+              color: "white",
+            }
+          }
+        }}
+      />
     </VStack>
   )
 }

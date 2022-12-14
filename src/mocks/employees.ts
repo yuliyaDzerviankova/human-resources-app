@@ -1,3 +1,7 @@
+import { EducationKind, InstitutionName } from "../models"
+import { departments } from "./departments"
+import { positions } from "./positions"
+
 export const employees = [
   {
     id: "1",
@@ -14,9 +18,19 @@ export const employees = [
     passportAddress: "ул. Жемчужная 22/3",
     actualAddress: "ул. Жемчужная 22/3",
     nationality: "Беларусь",
-    department: "Тестирования",
-    position: "Тестировщик ПО",
-    offerDate: "02/12/2020"
+    department: departments[1],
+    position: positions[2],
+    offerDate: "02/12/2020",
+    education: [
+      {
+        id: "1",
+        educationKind: EducationKind.MIDDLESRECIALITY,
+        institutionName: InstitutionName.GGAEK,
+        documentName: "Диплом",
+        finishDate: "30/06/2020",
+        speciality: "Техник-программист",
+      },
+    ]
   },
   {
     id: "2",
@@ -33,8 +47,8 @@ export const employees = [
     passportAddress: "ул. Гагарина 14/2",
     actualAddress: "ул. Междугородняя 2/10",
     nationality: "Беларусь",
-    department: "Разработки",
-    position: "Фронтенд разработчик",
+    department: departments[0],
+    position: positions[0],
     offerDate: "23/02/2019"
   },
   {
@@ -52,8 +66,8 @@ export const employees = [
     passportAddress: "ул. Жемчужная 22/3",
     actualAddress: "ул. Жемчужная 22/3",
     nationality: "Беларусь",
-    department: "Рекрутинга",
-    position: "Рекрутер",
+    department: departments[2],
+    position: positions[3],
     offerDate: "02/03/2018"
   },
   {
@@ -71,8 +85,8 @@ export const employees = [
     passportAddress: "ул. Жемчужная 22/3",
     actualAddress: "ул. Жемчужная 22/3",
     nationality: "Беларусь",
-    department: "Кадров",
-    position: "Проектный менеджер",
+    department: departments[3],
+    position: positions[4],
     offerDate: "02/01/2021"
   },
   {
@@ -90,8 +104,8 @@ export const employees = [
     passportAddress: "ул. Жемчужная 22/3",
     actualAddress: "ул. Жемчужная 22/3",
     nationality: "Беларусь",
-    department: "Тестирования",
-    position: "Тестировщик ПО",
+    department: departments[1],
+    position: positions[1],
     offerDate: "02/12/2019"
   },
 ]

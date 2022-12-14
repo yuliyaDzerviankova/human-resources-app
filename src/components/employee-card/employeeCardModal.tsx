@@ -1,3 +1,4 @@
+import React from "react"
 import {
   Modal,
   ModalBody,
@@ -12,19 +13,18 @@ import {
   Tabs,
   Text
 } from "@chakra-ui/react"
-import React from "react"
 import { Family } from "./family"
 import { Education } from "./education"
 import { GeneralInfo } from "./general-info"
 import { Employee } from "../../models"
 
-type EmployeeCardProps = {
+type EmployeeCardModalProps = {
   isOpen: boolean
   onClose: () => void
   employee: Employee
 }
 
-export const EmployeeCard: React.FC<EmployeeCardProps> = ({ isOpen, onClose, employee }) => {
+export const EmployeeCardModal: React.FC<EmployeeCardModalProps> = ({ isOpen, onClose, employee }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
       <ModalOverlay />
@@ -52,7 +52,7 @@ export const EmployeeCard: React.FC<EmployeeCardProps> = ({ isOpen, onClose, emp
               </TabPanel>
 
               <TabPanel height="54vh">
-                <Family />
+                <Family employee={employee} />
               </TabPanel>
             </TabPanels>
           </Tabs>
