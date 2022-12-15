@@ -45,7 +45,7 @@ export const EducationChangesModal: React.FC<EducationChangesModalProps> = ({
           <FormField
             label="Образование"
             name="nationality"
-            tootlipLabel=""
+            tootlipLabel="Невозможно выбрать данное образование"
           >
             <Select background="ash_grey" borderColor="#353535">
               {educationKinds.map((kind) => (

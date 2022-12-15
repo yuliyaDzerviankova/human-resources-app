@@ -9,13 +9,18 @@ import {
   Th,
   Tbody,
   Td,
-  Stack
+  Stack,
+  useDisclosure
 } from "@chakra-ui/react"
 import { faEllipsisVertical, faAdd } from "@fortawesome/free-solid-svg-icons"
 import { Menu } from "../../components"
 import { orders } from "../../mocks/orders"
+import { ChangePositionModal } from "./change-position-modal"
+import { NewEmployeeModal } from "./new-employee-modal"
 
 export const OrdersView = () => {
+  const { isOpen, onClose, onOpen } = useDisclosure()
+  const { isOpen: isNewEmployeeOpen, onClose: onNewEmployeeClose } = useDisclosure()
   const orderTypes = [
     { id: "1", type: "Приказ о принятии на работу нового сотрудника" },
     { id: "2", type: "Приказ об увольнения сотрудника" },
@@ -131,7 +136,7 @@ export const OrdersView = () => {
                         <Menu
                           menuButtonIcon={faEllipsisVertical}
                           menuItems={[
-                            { name: "Создать приказ", icon: faAdd, onClick: () => {} },
+                            { name: "Создать приказ", icon: faAdd, onClick: () => onOpen() },
                           ]}
                         />
                       </Td>
@@ -143,6 +148,8 @@ export const OrdersView = () => {
             </Flex>
         </Stack>
       </Flex>
+      <ChangePositionModal isOpen={isOpen} onClose={onClose} />
+      <NewEmployeeModal isOpen={isNewEmployeeOpen} onClose={onNewEmployeeClose} />
     </>
   )
 }

@@ -15,6 +15,9 @@ import {
 import React from "react"
 import { FormField } from "../../components"
 import { Employee } from "../../models"
+import * as z from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 type FamilyChangesModalProps = {
   isFamilyOpen: boolean
@@ -22,7 +25,36 @@ type FamilyChangesModalProps = {
   employee: Employee
 }
 
+type Family = {
+  relationDegree: string
+  surname: string
+  firstName: string
+  bDay: string
+}
+
 export const FamilyChangesModal: React.FC<FamilyChangesModalProps> = ({ isFamilyOpen, onFamilyClose, employee }) => {
+  const schema = z.object({
+    relationDegree: z.string(),
+    surname: z.string(),
+    firstName: z.string(),
+    bDay: z.string()
+  })
+
+  const {
+    formState: { errors },
+    register,
+  } = useForm<Family>({
+    resolver: zodResolver(schema),
+    mode: "all",
+    defaultValues: {
+      relationDegree: "",
+      surname: "",
+      firstName: "",
+      bDay: "",
+    }
+  })
+
+  const formFieldProps = { errors, register }
 
   const addFamily = () => {}
 
@@ -36,10 +68,11 @@ export const FamilyChangesModal: React.FC<FamilyChangesModalProps> = ({ isFamily
         <ModalCloseButton />
         <ModalBody px={10}>
           <Stack>
-          <FormField
+          <FormField<Family>
             label="Степень родства"
-            name="nationality"
+            name="relationDegree"
             tootlipLabel=""
+            {...formFieldProps}
           >
             <Select background="ash_grey" borderColor="#353535">
               <option>Иждевенец/ка</option>
@@ -48,26 +81,29 @@ export const FamilyChangesModal: React.FC<FamilyChangesModalProps> = ({ isFamily
             </Select>
           </FormField>
           
-          <FormField
+          <FormField<Family>
             label="Фамилия"
-            name="nationality"
+            name="surname"
             tootlipLabel=""
+            {...formFieldProps}
           >
             <Input />
           </FormField>
 
-          <FormField
+          <FormField<Family>
             label="Имя"
-            name="nationality"
+            name="firstName"
             tootlipLabel=""
+            {...formFieldProps}
           >
             <Input />
           </FormField>
 
-          <FormField
+          <FormField<Family>
             label="Год рождения"
-            name="nationality"
-            tootlipLabel=""
+            name="bDay"
+            tootlipLabel={errors.bDay?.message || ""}
+            {...formFieldProps}
           >
             <Input type="date" />
           </FormField>

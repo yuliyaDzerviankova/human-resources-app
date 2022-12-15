@@ -2,6 +2,7 @@ import { Button, Flex, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } 
 import { faPrint } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
+import { useNavigate } from "react-router-dom"
 import { Employee } from "../../models"
 
 type EducationProos = {
@@ -9,6 +10,8 @@ type EducationProos = {
 }
 
 export const Education: React.FC<EducationProos> = ({employee}) => {
+  const navigate = useNavigate()
+
   return (
     <Stack flex={1} height="100%">
       <TableContainer
@@ -64,7 +67,7 @@ export const Education: React.FC<EducationProos> = ({employee}) => {
 
       <Flex flex={1} align="flex-end" justify="space-between" width="100%">
         <Flex align="center">
-          <Button mr={6}>Учебные заведения</Button>
+          <Button mr={6} onClick={() => navigate("/educations")}>Учебные заведения</Button>
           <Button>Добавить образование</Button>
         </Flex>
         <Button leftIcon={<FontAwesomeIcon icon={faPrint} />}>Печать личной карточки</Button>

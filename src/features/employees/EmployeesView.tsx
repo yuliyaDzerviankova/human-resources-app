@@ -20,23 +20,19 @@ import {
   Stack
 } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Employee } from "../../models"
 import { faEllipsisVertical, faAdd, faPen, faSearch, faFilter } from "@fortawesome/free-solid-svg-icons"
 import { employees } from "../../mocks/employees"
-import { Menu } from "../../components"
+import { EmployeeCardModal, Menu } from "../../components"
 import { departments } from "../../mocks/departments"
 import { positions } from "../../mocks/positions"
+import { initEmployee } from "../../mocks/initialModels/initEmployee"
 
-type EmployeesViewProps = {
-  // onOpen:() => void
-  // onClose: () => void
-  setEmployee: Dispatch<SetStateAction<Employee>>
-}
-
-export const EmployeesView: React.FC<EmployeesViewProps> = ({ setEmployee }) => {
+export const EmployeesView = () => {
   const navigate = useNavigate()
+  const [employee, setEmployee] = useState<Employee>(initEmployee)
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [isDepartmentFilter, setIsDepartmentFilter] = useState(false)
   const [isPositionFilter, setIsPositionFilter] = useState(false)
@@ -245,7 +241,7 @@ export const EmployeesView: React.FC<EmployeesViewProps> = ({ setEmployee }) => 
                   key={employee.id}
                   onClick={() => {
                     setEmployee(employee)
-                    // onOpen()
+                    onOpen()
                   }}
                   _hover={{
                     bg: "hookers_green",
@@ -258,12 +254,11 @@ export const EmployeesView: React.FC<EmployeesViewProps> = ({ setEmployee }) => 
                   <Td borderColor="dark_sea_green" fontSize="16px">{employee.department.name}</Td>
                   <Td borderColor="dark_sea_green" fontSize="16px">{employee.position.name}</Td>
                   <Td borderColor="dark_sea_green" fontSize="16px">{employee.offerDate}</Td>
-                  <Td borderColor="dark_sea_green">
+                  <Td borderColor="dark_sea_green" onClick={(event) => event.stopPropagation}>
                     <Menu
                       menuButtonIcon={faEllipsisVertical}
                       menuItems={[
                         { name: "Изменить", icon: faPen, onClick: () => navigate(`/editEmployee/${employee.id}`) },
-                        { name: "Удалить", icon: faPen, onClick: () => {} }
                       ]}
                     />
                   </Td>
@@ -273,6 +268,8 @@ export const EmployeesView: React.FC<EmployeesViewProps> = ({ setEmployee }) => 
           </Tbody>
         </Table>
       </TableContainer>
+
+      <EmployeeCardModal isOpen={isOpen} onClose={onClose} employee={employee} />
     </Stack>
   )
 }

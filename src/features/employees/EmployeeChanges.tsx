@@ -50,8 +50,7 @@ export const EmployeeChanges = () => {
   })
 
   const {
-    formState: { errors, isDirty, isValid },
-    getValues,
+    formState: { errors },
     register,
     setValue,
   } = useForm<Employee>({
@@ -77,7 +76,7 @@ export const EmployeeChanges = () => {
     },
   })
 
-  const isInvalid = !isDirty || !isValid
+  // const isInvalid = !isDirty || !isValid
   const formFieldProps = { errors, register }
 
   useEffect(() => {
@@ -267,7 +266,7 @@ export const EmployeeChanges = () => {
         <Popover placement="left-start">
           <PopoverTrigger>
             <Button
-              disabled={isInvalid}
+              // disabled={isInvalid}
             >
               {isEdit ? "Изменить" : "Далее"}
           </Button>
@@ -280,8 +279,8 @@ export const EmployeeChanges = () => {
                 <Button onClick={() => navigate("/home")}>Нет</Button>
                 <Button
                   onClick={() => {
-                    PopToast("Toast", "created", "success")
-                    // onEducationOpen()
+                    PopToast("Сообщение", "Сотрудник добавлен", "success")
+                    onEducationOpen()
                     // employeeToast()
                   }}
                 >

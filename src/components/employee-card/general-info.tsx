@@ -6,10 +6,11 @@ import { faPrint } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from "react-router-dom"
 
 type GeneralInfoProps = {
+  onOpen: () => void
   employee: Employee
 }
 
-export const GeneralInfo: React.FC<GeneralInfoProps> = ({ employee }) => {
+export const GeneralInfo: React.FC<GeneralInfoProps> = ({ employee, onOpen }) => {
   const navigate = useNavigate()
 
   return (
@@ -88,7 +89,7 @@ export const GeneralInfo: React.FC<GeneralInfoProps> = ({ employee }) => {
 
       <Flex flex={1} align="flex-end" justify="space-between" width="100%">
         <Flex align="center">
-          <Button mr={6}>Уволить сотрудника</Button>
+          <Button mr={6} onClick={onOpen}>Уволить сотрудника</Button>
           <Button onClick={() => navigate(`/editEmployee/${employee.id}`)}>Изменить данные</Button>
         </Flex>
         <Button leftIcon={<FontAwesomeIcon icon={faPrint} />}>Печать личной карточки</Button>
