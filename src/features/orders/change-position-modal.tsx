@@ -37,7 +37,7 @@ export const ChangePositionModal: React.FC<ChangePositionModalProps> = ({ isOpen
               <Select defaultValue="0" background="ash_grey" borderColor="#353535">
                 <option value="0" disabled>Выберите сотрудника</option>
                 {employees.map((item) => (
-                  <option>{item.surname}</option>
+                  <option key={item.id}>{item.surname}</option>
                 ))}
               </Select>
             </FormField>
@@ -49,7 +49,7 @@ export const ChangePositionModal: React.FC<ChangePositionModalProps> = ({ isOpen
               <Select defaultValue="0" background="ash_grey" borderColor="#353535">
                 <option value="0" disabled>Выберите отдел</option>
                 {departments.map((item) => (
-                  <option>{item.name}</option>
+                  <option key={item.id}>{item.name}</option>
                 ))}
               </Select>
             </FormField>
@@ -61,7 +61,7 @@ export const ChangePositionModal: React.FC<ChangePositionModalProps> = ({ isOpen
               <Select defaultValue="0" background="ash_grey" borderColor="#353535">
                 <option value="0" disabled>Выберите должность</option>
                 {positions.map((item) => (
-                  <option>{item.name}</option>
+                  <option key={item.id}>{item.name}</option>
                 ))}
               </Select>
             </FormField>

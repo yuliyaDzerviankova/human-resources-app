@@ -1,4 +1,4 @@
-import {Stack, Flex, Text, Button} from "@chakra-ui/react"
+import { Stack, Flex, Text, Button}  from "@chakra-ui/react"
 import React from "react"
 import { Employee } from "../../models"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -92,7 +92,13 @@ export const GeneralInfo: React.FC<GeneralInfoProps> = ({ employee, onOpen }) =>
           <Button mr={6} onClick={onOpen}>Уволить сотрудника</Button>
           <Button onClick={() => navigate(`/editEmployee/${employee.id}`)}>Изменить данные</Button>
         </Flex>
-        <Button leftIcon={<FontAwesomeIcon icon={faPrint} />}>Печать личной карточки</Button>
+        {/* <Link to={`/printEmployee/${employee.id}`} state={{ handlePrint }}>Печать</Link> */}
+        <Button
+          onClick={() => navigate(`/printEmployee/${employee.id}`)}
+          leftIcon={<FontAwesomeIcon icon={faPrint} />}
+        >
+          Печать личной карточки
+        </Button>
       </Flex>
     </Stack>
   )

@@ -1033,7 +1033,7 @@
     core-js-pure "^3.25.1"
     regenerator-runtime "^0.13.11"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.20.6"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.6.tgz#facf4879bfed9b5326326273a64220f099b0fce3"
   integrity sha512-Q+8MqP7TiHMWzSfwiJwXCjyf4GYA4Dgw3emg/7xmwsdLJOZUp+nMqcOwOzzYheuM1rhDu8FSj2l0aoMygEuXuA==
@@ -5831,6 +5831,13 @@ hey-listen@^1.0.8:
   resolved "https://pkgs.dev.azure.com/iacplatform/dd282f4f-2d16-4f90-ad60-fc7751144b8d/_packaging/InternalNPM/npm/registry/hey-listen/-/hey-listen-1.0.8.tgz#8e59561ff724908de1aa924ed6ecc84a56a9aa68"
   integrity sha1-jllWH/ckkI3hqpJO1uzISlapqmg=
 
+history@^5.3.0:
+  version "5.3.0"
+  resolved "https://pkgs.dev.azure.com/iacplatform/dd282f4f-2d16-4f90-ad60-fc7751144b8d/_packaging/InternalNPM/npm/registry/history/-/history-5.3.0.tgz#1548abaa245ba47992f063a0783db91ef201c73b"
+  integrity sha1-FUirqiRbpHmS8GOgeD25HvIBxzs=
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+
 hoist-non-react-statics@^3.3.1:
   version "3.3.2"
   resolved "https://pkgs.dev.azure.com/iacplatform/dd282f4f-2d16-4f90-ad60-fc7751144b8d/_packaging/InternalNPM/npm/registry/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
@@ -8695,6 +8702,13 @@ react-style-singleton@^2.2.1:
     get-nonce "^1.0.0"
     invariant "^2.2.4"
     tslib "^2.0.0"
+
+react-to-print@^2.14.10:
+  version "2.14.10"
+  resolved "https://pkgs.dev.azure.com/iacplatform/dd282f4f-2d16-4f90-ad60-fc7751144b8d/_packaging/InternalNPM/npm/registry/react-to-print/-/react-to-print-2.14.10.tgz#f063bb368c2d8926012d52780a2b983e91c3a797"
+  integrity sha1-8GO7NowtiSYBLVJ4CiuYPpHDp5c=
+  dependencies:
+    prop-types "^15.8.1"
 
 react@^18.2.0:
   version "18.2.0"

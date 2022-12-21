@@ -21,7 +21,7 @@ export const employees = [
     department: departments[1],
     position: positions[2],
     offerDate: "02/12/2020",
-    education: [
+    educations: [
       {
         id: "1",
         educationKind: EducationKind.MIDDLESRECIALITY,
@@ -30,7 +30,16 @@ export const employees = [
         finishDate: "30/06/2020",
         speciality: "Техник-программист",
       },
-    ]
+    ],
+    family: [
+      {
+        id: "1",
+        surname: "Шишкова",
+        firstName: "Валентина",
+        bDay: "13/02/2001",
+        relationDegree: "супруга",
+      }
+    ],
   },
   {
     id: "2",
@@ -49,7 +58,9 @@ export const employees = [
     nationality: "Беларусь",
     department: departments[0],
     position: positions[0],
-    offerDate: "23/02/2019"
+    offerDate: "23/02/2019",
+    educations: [],
+    family: [],
   },
   {
     id: "3",
@@ -68,7 +79,9 @@ export const employees = [
     nationality: "Беларусь",
     department: departments[2],
     position: positions[3],
-    offerDate: "02/03/2018"
+    offerDate: "02/03/2018",
+    educations: [],
+    family: [],
   },
   {
     id: "4",
@@ -87,7 +100,9 @@ export const employees = [
     nationality: "Беларусь",
     department: departments[3],
     position: positions[4],
-    offerDate: "02/01/2021"
+    offerDate: "02/01/2021",
+    educations: [],
+    family: [],
   },
   {
     id: "5",
@@ -106,6 +121,8 @@ export const employees = [
     nationality: "Беларусь",
     department: departments[1],
     position: positions[1],
-    offerDate: "02/12/2019"
+    offerDate: "02/12/2019",
+    educations: [],
+    family: [],
   },
 ]

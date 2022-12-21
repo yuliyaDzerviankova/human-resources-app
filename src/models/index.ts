@@ -1,3 +1,4 @@
+export type { Education } from "./Education"
 export type { Employee } from "./Employee"
 export type { Staffing } from "./Staffing"
 export { EducationKind } from "./educationKind"

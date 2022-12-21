@@ -28,10 +28,8 @@ type EmployeeCardModalProps = {
 
 export const EmployeeCardModal: React.FC<EmployeeCardModalProps> = ({ isOpen, onClose, employee }) => {
   const { isOpen: isRemoveOpen, onClose: onRemoveClose, onOpen: onRemoveOpen } = useDisclosure()
-  
-  const deleteEmployee = () => {
 
-  }
+  const deleteEmployee = () => {}
 
   return (
     <>
@@ -72,8 +70,7 @@ export const EmployeeCardModal: React.FC<EmployeeCardModalProps> = ({ isOpen, on
         employee={employee}
         isOpen={isRemoveOpen}
         onClose={onRemoveClose}
-        // done={() => deleteEmployee(employee.id)}
-        done={() => {}}
+        done={() => deleteEmployee()}
       />
     </>
   )

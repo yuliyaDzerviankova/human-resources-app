@@ -1,3 +1,6 @@
+import { Education } from "./Education"
+import { Family } from "./Family"
+
 export type Employee = {
   id: string
   surname: string
@@ -16,4 +19,6 @@ export type Employee = {
   department: { id: string, name: string }
   position: { id: string, name: string }
   offerDate: string
+  educations: Education[]
+  family: Family[]
 }

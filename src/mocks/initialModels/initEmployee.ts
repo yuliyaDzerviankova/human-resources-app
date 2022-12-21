@@ -1,3 +1,5 @@
+import { Education } from "../../models"
+
 export const initEmployee = {
   id: "",
   surname: "",
@@ -16,4 +18,6 @@ export const initEmployee = {
   department: { id: "", name: "" },
   position: { id: "", name: "" },
   offerDate: "",
+  educations: [] as Education[],
+  family: [],
 }

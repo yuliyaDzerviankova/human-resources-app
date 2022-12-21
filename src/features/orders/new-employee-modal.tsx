@@ -36,7 +36,7 @@ export const NewEmployeeModal: React.FC<NewEmployeeModalProps> = ({ isOpen, onCl
               <Select defaultValue="0" background="ash_grey" borderColor="#353535">
                 <option value="0" disabled>Выберите должность</option>
                 {positions.map((item) => (
-                  <option>{item.name}</option>
+                  <option key={item.id}>{item.name}</option>
                 ))}
               </Select>
             </FormField>
@@ -62,7 +62,7 @@ export const NewEmployeeModal: React.FC<NewEmployeeModalProps> = ({ isOpen, onCl
               <Select defaultValue="0" background="ash_grey" borderColor="#353535">
                 <option value="0" disabled>Выберите отдел</option>
                 {departments.map((item) => (
-                  <option>{item.name}</option>
+                  <option key={item.id}>{item.name}</option>
                 ))}
               </Select>
             </FormField>

@@ -68,7 +68,7 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
               <Select defaultValue="0" background="ash_grey" borderColor="#353535">
                 <option value="0" disabled>Выберите причину</option>
                 {fireReasons.map((item) => (
-                  <option>{item.reason}</option>
+                  <option key={item.id}>{item.reason}</option>
                 ))}
               </Select>
             </FormField>
