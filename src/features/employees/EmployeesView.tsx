@@ -29,6 +29,7 @@ import { EmployeeCardModal, Menu } from "../../components"
 import { departments } from "../../mocks/departments"
 import { positions } from "../../mocks/positions"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
+import axios from "axios"
 
 export const EmployeesView = () => {
   const navigate = useNavigate()
@@ -47,11 +48,11 @@ export const EmployeesView = () => {
         item.surname.toLocaleLowerCase().includes(search) ||
         item.firstName.toLocaleLowerCase().includes(search) ||
         item.patronymic.toLocaleLowerCase().includes(search) ||
-        item.department.name.toLocaleLowerCase().includes(search) ||
-        item.position.name.toLocaleLowerCase().includes(search) ||
+        item.department.toLocaleLowerCase().includes(search) ||
+        item.position.toLocaleLowerCase().includes(search) ||
         item.offerDate.toLocaleLowerCase().includes(search)
       )
-      setEmployeesArray(searchArray)      
+      setEmployeesArray(searchArray)
     }
   }
 
@@ -59,13 +60,13 @@ export const EmployeesView = () => {
   const filterPosition = (e: ChangeEvent<HTMLSelectElement>) => setPositionFilter(e.target.value)
 
   const applyFilter = () => {
-    const filterArray = employees.filter((item) => item.department.name === departmentFilter)
+    const filterArray = employees.filter((item) => item.department === departmentFilter)
     setEmployeesArray(filterArray)
     setIsDepartmentFilter(false)
   }
 
   const applyPositionFilter = () => {
-    const filterArray = employees.filter((item) => item.position.name === positionFilter)
+    const filterArray = employees.filter((item) => item.position === positionFilter)
     console.log(filterArray)
     
     setEmployeesArray(filterArray)
@@ -81,6 +82,10 @@ export const EmployeesView = () => {
     setEmployeesArray(employees)
     setIsPositionFilter(false)
   }
+
+  useEffect(() => {
+    axios("http://localhost:8080/employees").then((response) => console.log(response))
+  }, [])
 
   useEffect(() => setEmployeesArray(employees), [employees])
 
@@ -172,10 +177,10 @@ export const EmployeesView = () => {
                     >
                       <FormControl mb={6}>
                         <FormLabel>Отдел</FormLabel>
-                        <Select background="ash_gray" defaultValue={0} onChange={(e: ChangeEvent<HTMLSelectElement>) => filterDepartment(e)}>
-                          <option value={0} disabled>Выберите отдел</option>
+                        <Select background="ash_gray" onChange={(e: ChangeEvent<HTMLSelectElement>) => filterDepartment(e)}>
+                          <option value="" disabled>Выберите отдел</option>
                           {departments.map((item) => (
-                            <option key={item.id}>{item.name}</option>
+                            <option key={item.id} value={item.id}>{item.name}</option>
                           ))}
                         </Select>
                       </FormControl>
@@ -251,8 +256,12 @@ export const EmployeesView = () => {
                   <Td borderColor="dark_sea_green" fontSize="16px">{employee.surname}</Td>
                   <Td borderColor="dark_sea_green" fontSize="16px">{employee.firstName}</Td>
                   <Td borderColor="dark_sea_green" fontSize="16px">{employee.patronymic}</Td>
-                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.department.name}</Td>
-                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.position.name}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">
+                    {departments.find((item) => item.id === employee.department)?.name}
+                  </Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">
+                    {positions.find((item) => item.id === employee.position)?.name}
+                  </Td>
                   <Td borderColor="dark_sea_green" fontSize="16px">{employee.offerDate}</Td>
                   <Td borderColor="dark_sea_green" onClick={(event) => event.stopPropagation}>
                     <Menu

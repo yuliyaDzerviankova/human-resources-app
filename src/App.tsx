@@ -9,6 +9,10 @@ import { Educations } from "./features/educations/Educations"
 import { faUser, faSignOut } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { PrintEmployee } from "./components/employee-card/PrintEmployee"
+import { PrintNewEmployee } from "./features/orders/printNewEmployee"
+import { PrintChangePosition } from "./features/orders/printChangePosition"
+import { PrintFiredEmployee } from "./features/orders/printFiredEmployee"
+import { PrintNewStaffTable } from "./features/orders/printNewStaffTable"
 
 const App = () => {
   const { setColorMode } = useColorMode()
@@ -25,7 +29,11 @@ const App = () => {
     { path: "/addEmployee", element: <EmployeeChanges /> },
     { path: "/editEmployee/:id", element: <EmployeeChanges /> },
     { path: "/educations", element: <Educations /> },
-    { path: "/printEmployee/:id", element: <PrintEmployee /> }
+    { path: "/printEmployee/:id", element: <PrintEmployee /> },
+    { path: "/printNewEmployee", element: <PrintNewEmployee /> },
+    { path: "/printChangePosition", element: <PrintChangePosition /> },
+    { path: "/printFiredEmployee", element: <PrintFiredEmployee /> },
+    { path: "/printStaffTable", element: <PrintNewStaffTable /> },
   ])
   
 

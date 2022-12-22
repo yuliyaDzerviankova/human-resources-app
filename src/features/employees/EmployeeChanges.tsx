@@ -13,6 +13,8 @@ import { EducationChangesModal } from "./EducationChangesModal"
 import { Toaster } from "react-hot-toast"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import { PopToast } from "../../components/toaster/Toaster"
+import { positions } from "../../mocks/positions"
+import { departments } from "../../mocks/departments"
 
 export const EmployeeChanges = () => {
   const params = useParams()
@@ -53,6 +55,7 @@ export const EmployeeChanges = () => {
     formState: { errors },
     register,
     setValue,
+    getValues,
   } = useForm<Employee>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -239,8 +242,10 @@ export const EmployeeChanges = () => {
             {...formFieldProps}
           >
             <Select background="ash_grey" borderColor="#353535">
-              <option>Тестирования</option>
-              <option>Разработки</option>
+            <option value="" disabled>Выберите отдел</option>
+              {departments.map((item) => (
+                <option key={item.id} value={item.id}>{item.name}</option>
+              ))}
             </Select>
           </FormField>
 
@@ -251,8 +256,10 @@ export const EmployeeChanges = () => {
             {...formFieldProps}
           >
             <Select background="ash_grey" borderColor="#353535">
-              <option>Тестировщик</option>
-              <option>Разработчик</option>
+              <option value="" disabled>Выберите должность</option>
+              {positions.map((item) => (
+                <option key={item.id} value={item.id}>{item.name}</option>
+              ))}
             </Select>
           </FormField>
         </Stack>
@@ -281,6 +288,7 @@ export const EmployeeChanges = () => {
                   onClick={() => {
                     PopToast("Сообщение", "Сотрудник добавлен", "success")
                     onEducationOpen()
+                    console.log(getValues())
                     // employeeToast()
                   }}
                 >
@@ -298,7 +306,6 @@ export const EmployeeChanges = () => {
       />
       <Toaster
         position="top-right"
-        containerStyle={{}}
         toastOptions={{
           duration: 5000,
           style: {

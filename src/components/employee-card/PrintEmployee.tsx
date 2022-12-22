@@ -5,6 +5,7 @@ import { Employee } from "../../models"
 import { useReactToPrint } from "react-to-print"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import { employees } from "../../mocks/employees"
+// import JsPDF from "jspdf"
 
 export const PrintEmployee = () => {
   const navigate = useNavigate()
@@ -20,6 +21,17 @@ export const PrintEmployee = () => {
     content: reactToPrintContent
   })
 
+  // const generatePDF = () => {
+  //   const report = new JsPDF("portrait", "pt", "a4")
+  //   report.addFileToVFS("Amiri-Regular.ttf", "amiri")
+  //   report.addFont("Amiri-Regular.ttf", "Amiri", "normal")
+  //   report.setFont("Amiri")
+  //   const elementToPrint = document.querySelector("#report")
+  //   // @ts-ignore
+  //   report.html(elementToPrint).then(() => report.save("report.pdf"))
+  // }
+
+
   useEffect(() => {
     const employee = employees.find((item) => item.id === params.id) as Employee
     setEmployee(employee)
@@ -29,10 +41,12 @@ export const PrintEmployee = () => {
     <Stack p={2}>
       <Flex align="center" justify="flex-end" width="100%" p={4}>
         <Button onClick={handlePrint} mr={6}>Печать</Button>
+        {/* <Button onClick={generatePDF} mr={6}>Сохранить</Button> */}
         <Button onClick={() => navigate(-1)}>Назад</Button>
       </Flex>
-      <Stack ref={componentRef} p={4}>
-        <Heading fontSize={24}>Личная карточка сотрудника</Heading>
+      <Stack ref={componentRef} px={4} py={6} id="report">
+        {/* <Heading fontSize={24}>Личная карточка сотрудника</Heading> */}
+        <Heading fontSize={24}>Personal card</Heading>
         <Box width="100%" height="1px" background="black" />
         <Flex align="center" justify="space-between">
           <Stack>
@@ -183,9 +197,75 @@ export const PrintEmployee = () => {
               <Text mr={4}>дата выдачи</Text>
               <Text textDecoration="underline">{employee.dateReceipt}</Text>
             </Flex>
+            <Flex direction="column">
+              <Text>12. Адрес регистрации по месту жительства</Text>
+              <Text textDecoration="underline">{employee.passportAddress}</Text>
+            </Flex>
+            <Flex direction="column">
+              <Text>13. Адрес фактического проживания</Text>
+              <Text textDecoration="underline">{employee.actualAddress}</Text>
+            </Flex>
+            <Flex>
+              <Text mr={4}>14. Телефон</Text>
+              <Text textDecoration="underline">{employee.homePhone}</Text>
+            </Flex>
+            <Flex>
+              <Text mr={4}>14. Мобильный телефон</Text>
+              <Text textDecoration="underline">{employee.mobPhone}</Text>
+            </Flex>
           </Stack>
         </Flex>
+        <Text>Дата заполнения</Text>
+        <Flex>
+          <Flex mr={6}>
+            <Text mr={4}>Работник</Text>
+            <Text>___________________</Text>
+          </Flex>
+          <Flex>
+            <Text mr={4}>Подпись</Text>
+            <Text>___________________</Text>
+          </Flex>
+        </Flex>
 
+        <Flex>
+          <Text mr={4}>Основание прекращения трудового договора (увольнения)</Text>
+          <Text>__________________________________</Text>
+        </Flex>
+        <Flex>
+          <Text mr={4}>Дата увольнения</Text>
+          <Text mr={4}>"____"</Text>
+          <Text mr={4}>____________</Text>
+          <Text mr={4}>20___ г.</Text>
+        </Flex>
+        <Text mr={4}>Приказ № _____ от "____" ____________ 20____ г.</Text>
+        <Flex>
+          <Text>Работник отдела кадров</Text>
+          <Flex ml={4}>
+            <Flex direction="column" mr={4}>
+              <Text>_____________________</Text>
+              <Text textAlign="center">должность</Text>
+            </Flex>
+            <Flex direction="column" mr={4}>
+              <Text>_____________________</Text>
+              <Text textAlign="center">инициалы, фамилия</Text>
+            </Flex>            <Flex direction="column">
+              <Text>_____________________</Text>
+              <Text textAlign="center">личная подпись</Text>
+            </Flex>
+          </Flex>
+        </Flex>
+        <Flex>
+        <Text>Работник</Text>
+          <Flex ml={4} justify="space-between">
+            <Flex direction="column" mr={4}>
+              <Text>_____________________</Text>
+              <Text textAlign="center">личная подпись</Text>
+            </Flex>            <Flex direction="column">
+              <Text>_______________________________</Text>
+              <Text textAlign="center">инициалы, фамилия</Text>
+            </Flex>
+          </Flex>
+        </Flex>
       </Stack>
     </Stack>
   )

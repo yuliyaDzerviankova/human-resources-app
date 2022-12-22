@@ -12,6 +12,7 @@ import {
   Text
 } from "@chakra-ui/react"
 import React from "react"
+import { useNavigate } from "react-router-dom"
 import { FormField } from "../../components"
 import { EducationKind, Employee, InstitutionName } from "../../models"
 
@@ -26,6 +27,7 @@ export const EducationChangesModal: React.FC<EducationChangesModalProps> = ({
   onEducationClose,
   employee
 }) => {
+  const navigate = useNavigate()
   const educationKinds = [EducationKind.HIGH, EducationKind.MIDDLESRECIALITY, EducationKind.MIDDLE]
   const institutionNames = [InstitutionName.BSU, InstitutionName.BSUFK, InstitutionName.BSUIR, InstitutionName.GGAEK, InstitutionName.SKORINA]
 
@@ -97,6 +99,7 @@ export const EducationChangesModal: React.FC<EducationChangesModalProps> = ({
             onClick={() => {
               addEducation()
               onEducationClose()
+              navigate("/printNewEmployee")
             }}
           >Добавить</Button>
         </ModalFooter>

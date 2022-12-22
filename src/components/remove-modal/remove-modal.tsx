@@ -17,27 +17,69 @@ import {
   Stack,
   Text
 } from "@chakra-ui/react"
-import React from "react"
+import React, { useContext } from "react"
 import { useNavigate } from "react-router-dom"
+import { EmployeeContext } from "../../features/providers/context"
+import { employees } from "../../mocks/employees"
 
 import { fireReasons } from "../../mocks/fireReasons"
 import { Employee } from "../../models"
 import { FormField } from "../form-field/form-field"
+import * as z from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Types } from "../../features/providers/reducers"
 
 type RemoveModalProps = {
   isOpen: boolean
   onClose: () => void
-  done: () => void
   employee: Employee
+  isFromOrder?: boolean
+}
+
+type FiredEmployee = {
+  employeeId: string
+  fireDate: string
+  reasonId: string
 }
 
 export const RemoveModal: React.FC<RemoveModalProps> = ({
-  done,
   isOpen,
   onClose,
   employee,
+  isFromOrder = false,
 }) => {
   const navigate = useNavigate()
+  const { dispatch } = useContext(EmployeeContext)
+
+  const schema = z.object({
+    employeeId: z.string(),
+    fireDate: z.string(),
+    reasonId: z.string()
+  })
+
+  const {
+    formState: { errors },
+    register,
+    getValues,
+  } = useForm<FiredEmployee>({
+    resolver: zodResolver(schema),
+    mode: "all",
+    defaultValues: {
+      employeeId: "",
+      fireDate: "",
+      reasonId: "",
+    }
+  })
+
+  const formFieldProps = { errors, register }
+
+  const printOrder = () => {
+    const firedEmployee = getValues()
+    // @ts-ignore
+    dispatch({ type: Types.SetFiredEmployee, payload: { firedEmployee } })
+    navigate("/printFiredEmployee")
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl" isCentered>
@@ -48,22 +90,35 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
           <Stack spacing={5}>
             <FormField
               label="Сотрудник"
-              name="employee"
+              name="employeeId"
               tootlipLabel=""
+              {...formFieldProps}
             >
-              <Input disabled value={employee.surname} />
+              {isFromOrder ? (
+                <Select background="ash_grey" borderColor="#353535">
+                  <option value="" disabled>Выберите сотрудника</option>
+                  {employees.map((item) => (
+                    <option key={item.id}>{item.surname}</option>
+                  ))}
+                </Select>
+                ) : (
+                  <Input disabled value={employee.surname} />
+                )
+              }
             </FormField>
             <FormField
               label="Дата составления приказа"
-              name="date"
+              name="fireDate"
               tootlipLabel=""
+              {...formFieldProps}
             >
               <Input type="date" />
             </FormField>
             <FormField
               label="Причина увольнения"
-              name="employee"
+              name="reasonId"
               tootlipLabel=""
+              {...formFieldProps}
             >
               <Select defaultValue="0" background="ash_grey" borderColor="#353535">
                 <option value="0" disabled>Выберите причину</option>
@@ -95,7 +150,7 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
                 >
                   Нет
                 </Button>
-                <Button>Да</Button>
+                <Button onClick={printOrder}>Да</Button>
               </Flex>
             </PopoverBody>
           </PopoverContent>

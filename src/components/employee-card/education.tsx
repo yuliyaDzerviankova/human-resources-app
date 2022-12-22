@@ -1,6 +1,4 @@
 import { Button, Flex, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
-import { faPrint } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { Employee } from "../../models"
@@ -70,7 +68,6 @@ export const Education: React.FC<EducationProos> = ({employee}) => {
           <Button mr={6} onClick={() => navigate("/educations")}>Учебные заведения</Button>
           <Button>Добавить образование</Button>
         </Flex>
-        <Button leftIcon={<FontAwesomeIcon icon={faPrint} />}>Печать личной карточки</Button>
       </Flex>
     </Stack>
   )

@@ -1,6 +1,4 @@
 import { Button, Flex, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
-import { faPrint } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React from "react"
 import { FamilyChangesModal } from "../../features/employees/FamilyChangesModal"
 import { Employee } from "../../models"
@@ -39,7 +37,6 @@ export const Family: React.FC<FamilyProps> = ({ employee }) => {
         <Flex align="center">
           <Button onClick={onFamilyOpen}>Добавить члена семьи</Button>
         </Flex>
-        <Button leftIcon={<FontAwesomeIcon icon={faPrint} />}>Печать личной карточки</Button>
       </Flex>
       <FamilyChangesModal
         employee={employee}

@@ -13,20 +13,18 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 import { faEllipsisVertical, faAdd } from "@fortawesome/free-solid-svg-icons"
-import { Menu } from "../../components"
+import { useNavigate } from "react-router-dom"
+import { Menu, RemoveModal } from "../../components"
+import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import { orders } from "../../mocks/orders"
 import { ChangePositionModal } from "./change-position-modal"
-import { NewEmployeeModal } from "./new-employee-modal"
+import { NewStaffTableModal } from "./new-staff-table-modal"
 
 export const OrdersView = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure()
-  const { isOpen: isNewEmployeeOpen, onClose: onNewEmployeeClose } = useDisclosure()
-  const orderTypes = [
-    { id: "1", type: "Приказ о принятии на работу нового сотрудника" },
-    { id: "2", type: "Приказ об увольнения сотрудника" },
-    { id: "3", type: "Приказ о смене должности" },
-    { id: "4", type: "Приказ о добавлении штатной единицы" },
-  ]
+  const navigate = useNavigate()
+  const { isOpen: isChangePositionOpen, onClose: onChangePositionClose, onOpen: onChangePositionOpen } = useDisclosure()
+  const { isOpen: isNewStaffTableOpen, onOpen: onNewStaffTableOpen, onClose: onNewStaffTableClose } = useDisclosure()
+  const { isOpen: isFiredOpen, onOpen: onFiredOpen, onClose: onFiredClose } = useDisclosure()
 
   return (
     <>
@@ -129,27 +127,59 @@ export const OrdersView = () => {
               >
                 <Table>
                   <Tbody>
-                    {orderTypes.map(({ id, type }) => (
-                      <Tr key={id}>
-                        <Td borderColor="dark_sea_green">{type}</Td>
-                        <Td borderColor="dark_sea_green" textAlign="right">
+                    <Tr>
+                      <Td borderColor="dark_sea_green">Приказ о принятии на работу нового сотрудника</Td>
+                      <Td borderColor="dark_sea_green">
                         <Menu
                           menuButtonIcon={faEllipsisVertical}
                           menuItems={[
-                            { name: "Создать приказ", icon: faAdd, onClick: () => onOpen() },
+                            { name: "Создать приказ", icon: faAdd, onClick: () => navigate("/addEmployee") },
                           ]}
                         />
                       </Td>
-                      </Tr>
-                    ))}
+                    </Tr>
+                    <Tr>
+                      <Td borderColor="dark_sea_green">Приказ об увольнении сотрудника</Td>
+                      <Td borderColor="dark_sea_green">
+                        <Menu
+                          menuButtonIcon={faEllipsisVertical}
+                          menuItems={[
+                            { name: "Создать приказ", icon: faAdd, onClick: () => onFiredOpen() },
+                          ]}
+                        />
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td borderColor="dark_sea_green">Приказ о смене должности</Td>
+                      <Td borderColor="dark_sea_green">
+                        <Menu
+                          menuButtonIcon={faEllipsisVertical}
+                          menuItems={[
+                            { name: "Создать приказ", icon: faAdd, onClick: () => onChangePositionOpen() },
+                          ]}
+                        />
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td borderColor="dark_sea_green">Приказ о добавлении штатной единицы</Td>
+                      <Td borderColor="dark_sea_green">
+                        <Menu
+                          menuButtonIcon={faEllipsisVertical}
+                          menuItems={[
+                            { name: "Создать приказ", icon: faAdd, onClick: () => onNewStaffTableOpen() },
+                          ]}
+                        />
+                      </Td>
+                    </Tr>
                   </Tbody>
                 </Table>
               </TableContainer>
             </Flex>
         </Stack>
       </Flex>
-      <ChangePositionModal isOpen={isOpen} onClose={onClose} />
-      <NewEmployeeModal isOpen={isNewEmployeeOpen} onClose={onNewEmployeeClose} />
+      <ChangePositionModal isOpen={isChangePositionOpen} onClose={onChangePositionClose} />
+      <NewStaffTableModal isOpen={isNewStaffTableOpen} onClose={onNewStaffTableClose} />
+      <RemoveModal isOpen={isFiredOpen} onClose={onFiredClose} isFromOrder={true} employee={initEmployee} />
     </>
   )
 }

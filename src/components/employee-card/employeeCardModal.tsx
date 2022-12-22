@@ -70,7 +70,6 @@ export const EmployeeCardModal: React.FC<EmployeeCardModalProps> = ({ isOpen, on
         employee={employee}
         isOpen={isRemoveOpen}
         onClose={onRemoveClose}
-        done={() => deleteEmployee()}
       />
     </>
   )

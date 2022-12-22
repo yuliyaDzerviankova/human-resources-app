@@ -1,4 +1,4 @@
-import { Stack, Flex, Text, Button}  from "@chakra-ui/react"
+import { Stack, Flex, Text, Button } from "@chakra-ui/react"
 import React from "react"
 import { Employee } from "../../models"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"

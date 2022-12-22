@@ -1,6 +1,4 @@
 import { EducationKind, InstitutionName } from "../models"
-import { departments } from "./departments"
-import { positions } from "./positions"
 
 export const employees = [
   {
@@ -18,8 +16,8 @@ export const employees = [
     passportAddress: "ул. Жемчужная 22/3",
     actualAddress: "ул. Жемчужная 22/3",
     nationality: "Беларусь",
-    department: departments[1],
-    position: positions[2],
+    department: "2",
+    position: "2",
     offerDate: "02/12/2020",
     educations: [
       {
@@ -56,8 +54,8 @@ export const employees = [
     passportAddress: "ул. Гагарина 14/2",
     actualAddress: "ул. Междугородняя 2/10",
     nationality: "Беларусь",
-    department: departments[0],
-    position: positions[0],
+    department: "1",
+    position: "1",
     offerDate: "23/02/2019",
     educations: [],
     family: [],
@@ -77,8 +75,8 @@ export const employees = [
     passportAddress: "ул. Жемчужная 22/3",
     actualAddress: "ул. Жемчужная 22/3",
     nationality: "Беларусь",
-    department: departments[2],
-    position: positions[3],
+    department: "3",
+    position: "3",
     offerDate: "02/03/2018",
     educations: [],
     family: [],
@@ -98,8 +96,8 @@ export const employees = [
     passportAddress: "ул. Жемчужная 22/3",
     actualAddress: "ул. Жемчужная 22/3",
     nationality: "Беларусь",
-    department: departments[3],
-    position: positions[4],
+    department: "4",
+    position: "4",
     offerDate: "02/01/2021",
     educations: [],
     family: [],
@@ -119,8 +117,8 @@ export const employees = [
     passportAddress: "ул. Жемчужная 22/3",
     actualAddress: "ул. Жемчужная 22/3",
     nationality: "Беларусь",
-    department: departments[1],
-    position: positions[1],
+    department: "2",
+    position: "2",
     offerDate: "02/12/2019",
     educations: [],
     family: [],
