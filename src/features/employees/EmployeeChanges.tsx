@@ -1,5 +1,5 @@
 import { Button, Flex, Input, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, Stack, Text, useDisclosure, VStack } from "@chakra-ui/react"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { FormField } from "../../components/form-field/form-field"
 import { PageHeader } from "../../components/page-header/PageHeader"
@@ -15,14 +15,18 @@ import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import { PopToast } from "../../components/toaster/Toaster"
 import { positions } from "../../mocks/positions"
 import { departments } from "../../mocks/departments"
+import { EmployeeContext } from "../providers/context"
+import { Types } from "../providers/reducers"
 
 export const EmployeeChanges = () => {
   const params = useParams()
   const navigate = useNavigate()
-  const data = moment().format("DD/MM/YYYY")
+  const format = "DD/MM/YYYY"
+  const data = moment().format(format)
   const [isEdit, setIsEdit] = useState(false)
   const { isOpen: isEducationOpen, onOpen: onEducationOpen, onClose: onEducationClose } = useDisclosure()
   const [employee, setEmployee] = useState<Employee>(initEmployee)
+  const { dispatch } = useContext(EmployeeContext)
 
   useEffect(() => {
     if (params.id) {
@@ -31,6 +35,20 @@ export const EmployeeChanges = () => {
       setIsEdit(true)
     }
   }, [params.id])
+
+  const sendToPrint = () => {
+    const object = getValues()
+    const position = positions.find((item) => item.id === object.position) as { id: string; name: string }
+    const department = departments.find((item) => item.id === object.department) as { id: string; name: string }
+    const newEmployee = {
+      employee: object.surname,
+      position: position.name,
+      department: department.name,
+      date: data,
+    }
+    // @ts-ignore
+    dispatch({ type: Types.SetNewEmployee, payload: { newEmployee } })
+  }
 
   const schema = z.object({
     surname: z.string().nonempty(),
@@ -52,7 +70,7 @@ export const EmployeeChanges = () => {
   })
 
   const {
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
     register,
     setValue,
     getValues,
@@ -79,7 +97,7 @@ export const EmployeeChanges = () => {
     },
   })
 
-  // const isInvalid = !isDirty || !isValid
+  const isInvalid = !isDirty || !isValid
   const formFieldProps = { errors, register }
 
   useEffect(() => {
@@ -241,7 +259,7 @@ export const EmployeeChanges = () => {
             tootlipLabel=""
             {...formFieldProps}
           >
-            <Select background="ash_grey" borderColor="#353535">
+            <Select disabled={isEdit} background="ash_grey" borderColor="#353535">
             <option value="" disabled>Выберите отдел</option>
               {departments.map((item) => (
                 <option key={item.id} value={item.id}>{item.name}</option>
@@ -255,7 +273,7 @@ export const EmployeeChanges = () => {
             tootlipLabel=""
             {...formFieldProps}
           >
-            <Select background="ash_grey" borderColor="#353535">
+            <Select disabled={isEdit} background="ash_grey" borderColor="#353535">
               <option value="" disabled>Выберите должность</option>
               {positions.map((item) => (
                 <option key={item.id} value={item.id}>{item.name}</option>
@@ -272,9 +290,7 @@ export const EmployeeChanges = () => {
         </Button>
         <Popover placement="left-start">
           <PopoverTrigger>
-            <Button
-              // disabled={isInvalid}
-            >
+            <Button disabled={isInvalid}>
               {isEdit ? "Изменить" : "Далее"}
           </Button>
           </PopoverTrigger>
@@ -287,9 +303,9 @@ export const EmployeeChanges = () => {
                 <Button
                   onClick={() => {
                     PopToast("Сообщение", "Сотрудник добавлен", "success")
+                    sendToPrint()
                     onEducationOpen()
                     console.log(getValues())
-                    // employeeToast()
                   }}
                 >
                   Да

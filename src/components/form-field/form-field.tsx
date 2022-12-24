@@ -3,6 +3,7 @@ import React, { cloneElement, PropsWithChildren, ReactElement } from "react"
 import { Path, UseFormRegister } from "react-hook-form"
 
 export type FormFieldProps<FieldValues = any> = {
+  isRequired?: boolean
   label: string
   tootlipLabel: string
   name: Path<FieldValues> | null
@@ -12,6 +13,7 @@ export type FormFieldProps<FieldValues = any> = {
 }
 
 export const FormField = <T, > ({
+  isRequired = false,
   name,
   label,
   tootlipLabel = "",
@@ -20,7 +22,7 @@ export const FormField = <T, > ({
   controlWidth = "100%",
 }: PropsWithChildren<FormFieldProps<T>>) => {
   return (
-    <FormControl width={controlWidth}>
+    <FormControl width={controlWidth} isRequired={isRequired}>
     <Flex direction="column">
       <FormLabel mb={2} color="charcoal">{label}</FormLabel>
       <Tooltip label={tootlipLabel} placement="left" hasArrow>

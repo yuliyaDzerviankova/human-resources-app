@@ -1,5 +1,4 @@
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react"
-import moment from "moment"
 import React, { useCallback, useContext, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { useReactToPrint } from "react-to-print"
@@ -9,10 +8,10 @@ export const PrintNewEmployee = () => {
   const navigate = useNavigate()
   const componentRef = useRef<HTMLDivElement>(null)
   const { state: { globalState: { newEmployee } } } = useContext(EmployeeContext)
-  const format = "DD/MM/YYYY"
 
   const reactToPrintContent = useCallback(() => {
     return componentRef.current
+  // eslint-disable-next-line
   }, [componentRef.current])
 
   const handlePrint = useReactToPrint({
@@ -32,7 +31,7 @@ export const PrintNewEmployee = () => {
           <Text>г. Гомель</Text>
         </Flex>
         <Flex>
-          <Text mr={4}>{moment(newEmployee.date).format(format)}</Text>
+          <Text mr={4}>{newEmployee.date}</Text>
           <Text>№12585</Text>
         </Flex>
 
@@ -46,14 +45,14 @@ export const PrintNewEmployee = () => {
 
         <Box p={2} />
 
-        <Text>{newEmployee.employee} на должность {newEmployee.position} в {newEmployee.department} с {moment(newEmployee.date).format(format)} с заработной платой согласно штатному расписанию.</Text>
+        <Text>{newEmployee.employee} на должность {newEmployee.position} в отдел {newEmployee.department} с {newEmployee.date} с заработной платой согласно штатному расписанию.</Text>
 
         <Box p={4} />
 
         <Flex>
           <Text>Основание:</Text>  
           <Flex direction="column" ml={4}>
-            <Text>заявление {newEmployee.employee} от {moment(newEmployee.date).format(format)}</Text>
+            <Text>заявление {newEmployee.employee} от {newEmployee.date}</Text>
             <Text>трудовой контракт № ____________ от ___________</Text>
           </Flex>
         </Flex>
