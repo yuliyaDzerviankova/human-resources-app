@@ -1,5 +1,5 @@
 export enum EducationKind {
   HIGH = "Высшее",
-  MIDDLE = "Среднее",
+  PROFESSIONAL = "Профессионально-техническое",
   MIDDLESRECIALITY = "Средне-специальное",
 }

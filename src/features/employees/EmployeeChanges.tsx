@@ -1,10 +1,8 @@
 import { Button, Flex, Input, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, Stack, Text, useDisclosure, VStack } from "@chakra-ui/react"
 import React, { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { FormField } from "../../components/form-field/form-field"
-import { PageHeader } from "../../components/page-header/PageHeader"
+import { PageHeader, FormField } from "../../components"
 import moment from "moment"
-import { employees } from "../../mocks/employees"
 import { Employee } from "../../models"
 import * as z from "zod"
 import { useForm } from "react-hook-form"
@@ -17,11 +15,40 @@ import { positions } from "../../mocks/positions"
 import { departments } from "../../mocks/departments"
 import { EmployeeContext } from "../providers/context"
 import { Types } from "../providers/reducers"
+import axios from "axios"
+import { formatDate } from "../../constants"
+
+type EmployeeType = {
+  id: string
+  surname: string
+  firstName: string
+  patronymic: string
+  bDay: string
+  mobPhone: string
+  homePhone: string
+  passportId: number
+  actualAddress: string
+  birthPlace: string
+  dateReceipt: string
+  nationality: string
+  passportAddress: string
+  passportNumber: string
+  placeReceipt: string
+  educationId: string
+  educationKind: string
+  institutionName: string
+  documentName: string
+  finishDate: string
+  speciality: string
+  department: string
+  position: string
+  offerDate: string
+}
 
 export const EmployeeChanges = () => {
   const params = useParams()
   const navigate = useNavigate()
-  const format = "DD/MM/YYYY"
+  const format = "YYYY-MM-DD"
   const data = moment().format(format)
   const [isEdit, setIsEdit] = useState(false)
   const { isOpen: isEducationOpen, onOpen: onEducationOpen, onClose: onEducationClose } = useDisclosure()
@@ -30,20 +57,31 @@ export const EmployeeChanges = () => {
 
   useEffect(() => {
     if (params.id) {
-      const employee = employees.find((employee) => employee.id === params.id) as Employee
-      setEmployee(employee)
-      setIsEdit(true)
+      axios(
+        `http://localhost:8080/employees/${params.id}`,
+        { headers: {
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json"
+          } }
+      )
+        .then((response) => {
+          const data = response.data
+          setEmployee(data)
+          setIsEdit(true)
+        })
+        .catch((error) => console.log(error))
     }
   }, [params.id])
 
   const sendToPrint = () => {
     const object = getValues()
-    const position = positions.find((item) => item.id === object.position) as { id: string; name: string }
-    const department = departments.find((item) => item.id === object.department) as { id: string; name: string }
+    // const position = positions.find((item) => item.id === object.position) as { id: string; name: string }
+    // const department = departments.find((item) => item.id === object.department) as { id: string; name: string }
     const newEmployee = {
       employee: object.surname,
-      position: position.name,
-      department: department.name,
+      // position: position.name,
+      // department: department.name,
       date: data,
     }
     // @ts-ignore
@@ -74,31 +112,92 @@ export const EmployeeChanges = () => {
     register,
     setValue,
     getValues,
-  } = useForm<Employee>({
+  } = useForm<EmployeeType>({
     resolver: zodResolver(schema),
     mode: "all",
     defaultValues: {
       surname: employee.surname ?? "",
       firstName: employee.firstName ?? "",
       patronymic: employee.patronymic ?? "",
-      bDay: employee.bDay ?? "",
-      birthPlace: employee.birthPlace ?? "",
+      bDay: employee.bday ?? "",
+      birthPlace: employee.passport.birthPlace ?? "",
       mobPhone: employee.mobPhone ?? "",
       homePhone:employee.homePhone ?? "",
-      passportNumber: employee.passportNumber ?? "",
-      dateReceipt: employee.dateReceipt ?? "",
-      placeReceipt: employee.placeReceipt ?? "",
-      passportAddress: employee.passportAddress ?? "",
-      actualAddress: employee.actualAddress ?? "",
-      nationality: employee.nationality ?? "",
+      passportNumber: employee.passport.passportNumber ?? "",
+      dateReceipt: employee.passport.dateReceipt ?? "",
+      placeReceipt: employee.passport.placeReceipt ?? "",
+      passportAddress: employee.passport.passportAddress ?? "",
+      actualAddress: employee.passport.actualAddress ?? "",
+      nationality: employee.passport.nationality ?? "",
       department: employee.department ?? "",
       position: employee.position ?? "",
-      offerDate: employee.offerDate ?? "",
+      offerDate: employee.dateOfReceipt ?? "",
     },
   })
 
   const isInvalid = !isDirty || !isValid
   const formFieldProps = { errors, register }
+
+  const addEmployee = () => {
+    const object = getValues()
+    const sendObject = {
+      surname: object.surname,
+      firstName: object.firstName,
+      patronymic: object.patronymic,
+      bday: object.bDay,
+      mobPhone: object.mobPhone,
+      homePhone: object.homePhone,
+      passport: {
+        actualAddress: object.actualAddress,
+        birthPlace: object.birthPlace,
+        dateReceipt: object.dateReceipt,
+        nationality: object.nationality,
+        passportAddress: object.passportAddress,
+        passportNumber: object.passportNumber,
+        placeReceipt: object.placeReceipt,
+      },
+      department: object.department,
+      position: object.position,
+      dateOfReceipt: data,
+    }
+    console.log(sendObject)
+    axios.post("http://localhost:8080/employees/create", sendObject, { headers: {
+        "Accept": "application/json, application/*+json",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+        // "Content-Type": "application/x-www-form-urlencoded"
+      }
+    }).then((res) => {
+      PopToast("Сообщение", "Сотрудник добавлен", "success")
+      sendToPrint()
+      onEducationOpen()
+    }).catch((err) => console.log(err))
+    // TODO: добвление сотрудника
+    // TODO: создание приказа (id = 1)
+  }
+
+  const editEmployee = () => {
+    // TODO: редактирование сотрудника
+    const object = getValues()
+    const sendObject = {
+      surname: object.surname,
+      firstName: object.firstName,
+      patronymic: object.patronymic,
+      bday: object.bDay,
+      mobPhone: object.mobPhone,
+      homePhone: object.homePhone,
+      passport: {
+        actualAddress: object.actualAddress,
+        birthPlace: object.birthPlace,
+        dateReceipt: object.dateReceipt,
+        nationality: object.nationality,
+        passportAddress: object.passportAddress,
+        passportNumber: object.passportNumber,
+        placeReceipt: object.placeReceipt,
+      }
+    }
+  }
 
   useEffect(() => {
     if (params.id && employee) {
@@ -106,19 +205,19 @@ export const EmployeeChanges = () => {
       setValue("firstName", employee.firstName)
       setValue("surname", employee.surname)
       setValue("patronymic", employee.patronymic)
-      setValue("bDay", employee.bDay)
-      setValue("birthPlace", employee.birthPlace)
+      setValue("bDay", moment(employee.bday).format(format))
+      setValue("birthPlace", employee.passport.birthPlace)
       setValue("mobPhone", employee.mobPhone)
       setValue("homePhone", employee.homePhone)
-      setValue("passportNumber", employee.passportNumber)
-      setValue("dateReceipt", employee.dateReceipt)
-      setValue("placeReceipt", employee.placeReceipt)
-      setValue("passportAddress", employee.passportAddress)
-      setValue("actualAddress", employee.actualAddress)
-      setValue("nationality", employee.nationality)
+      setValue("passportNumber", employee.passport.passportNumber)
+      setValue("dateReceipt", moment(employee.passport.dateReceipt).format(format))
+      setValue("placeReceipt", employee.passport.placeReceipt)
+      setValue("passportAddress", employee.passport.passportAddress)
+      setValue("actualAddress", employee.passport.actualAddress)
+      setValue("nationality", employee.passport.nationality)
       setValue("department", employee.department)
       setValue("position", employee.position)
-      setValue("offerDate", employee.offerDate)
+      setValue("offerDate", moment(employee.dateOfReceipt).format(formatDate))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [employee, params.id])
@@ -130,11 +229,11 @@ export const EmployeeChanges = () => {
       />
       <Flex width="100%" align="center" justify="flex-end" pr={4}>
         <Text fontWeight="bold" mr={4}>Дата приёма на работу: </Text>
-        <Text>{isEdit ? employee.offerDate : data}</Text>
+        <Text>{isEdit ? moment(employee.dateOfReceipt).format(formatDate) : data}</Text>
       </Flex>
       <Flex flex={1} p={4} width="100%" justifyContent="space-between">
         <Stack spacing={4} width="45%">
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Фамилия"
             name="surname"
             tootlipLabel=""
@@ -143,7 +242,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
 
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Имя"
             name="firstName"
             tootlipLabel=""
@@ -152,7 +251,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
 
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Отчество"
             name="patronymic"
             tootlipLabel=""
@@ -161,7 +260,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
 
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Дата Рождения"
             name="bDay"
             tootlipLabel={errors.bDay?.message || ""}
@@ -170,7 +269,7 @@ export const EmployeeChanges = () => {
             <Input type="date" />
           </FormField>
 
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Место Рождения"
             name="birthPlace"
             tootlipLabel=""
@@ -179,7 +278,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
 
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Мобильный номер"
             name="mobPhone"
             tootlipLabel=""
@@ -188,7 +287,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
 
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Домашний номер"
             name="homePhone"
             tootlipLabel=""
@@ -199,7 +298,7 @@ export const EmployeeChanges = () => {
         </Stack>
 
         <Stack spacing={4} width="45%">          
-        <FormField<Employee>
+        <FormField<EmployeeType>
             label="Паспорт"
             name="passportNumber"
             tootlipLabel=""
@@ -208,7 +307,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
 
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Когда выдан"
             name="dateReceipt"
             tootlipLabel=""
@@ -217,7 +316,7 @@ export const EmployeeChanges = () => {
             <Input type="date" />
           </FormField>
           
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Кем выдан"
             name="placeReceipt"
             tootlipLabel=""
@@ -226,7 +325,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
           
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Адреc прописки"
             name="passportAddress"
             tootlipLabel=""
@@ -235,7 +334,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
           
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Адрес проживания"
             name="actualAddress"
             tootlipLabel=""
@@ -244,7 +343,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
           
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Гражданство"
             name="nationality"
             tootlipLabel=""
@@ -253,7 +352,7 @@ export const EmployeeChanges = () => {
             <Input />
           </FormField>
 
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Отдел"
             name="department"
             tootlipLabel=""
@@ -267,7 +366,7 @@ export const EmployeeChanges = () => {
             </Select>
           </FormField>
 
-          <FormField<Employee>
+          <FormField<EmployeeType>
             label="Должность"
             name="position"
             tootlipLabel=""
@@ -288,37 +387,29 @@ export const EmployeeChanges = () => {
         <Button onClick={() => navigate("/home")}>
           Отменить
         </Button>
-        <Popover placement="left-start">
-          <PopoverTrigger>
-            <Button disabled={isInvalid}>
-              {isEdit ? "Изменить" : "Далее"}
-          </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverArrow />
-            <PopoverBody display="flex" flexDirection="column">
-              <Text mb={6}>Вы уверены, что хотите добавить сотрудника?</Text>
-              <Flex flex={1} align="center" justify="space-between">
-                <Button onClick={() => navigate("/home")}>Нет</Button>
-                <Button
-                  onClick={() => {
-                    PopToast("Сообщение", "Сотрудник добавлен", "success")
-                    sendToPrint()
-                    onEducationOpen()
-                    console.log(getValues())
-                  }}
-                >
-                  Да
-                </Button>
-              </Flex>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
+        {isEdit ? <Button onClick={editEmployee}>Изменить</Button> : (
+          <Popover placement="left-start">
+            <PopoverTrigger>
+              {/*<Button disabled={isInvalid}>*/}
+              <Button>Далее</Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverBody display="flex" flexDirection="column">
+                <Text mb={6}>Вы уверены, что хотите добавить сотрудника?</Text>
+                <Flex flex={1} align="center" justify="space-between">
+                  <Button onClick={() => navigate("/home")}>Нет</Button>
+                  <Button onClick={() => addEmployee()}>Да</Button>
+                </Flex>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        )}
       </Flex>
       <EducationChangesModal
+        employeeId={employee.id}
         isEducationOpen={isEducationOpen}
         onEducationClose={onEducationClose}
-        employee={employee}
       />
       <Toaster
         position="top-right"

@@ -1,21 +1,35 @@
 import { Box, Flex, Stack, Table, TableContainer, Tbody, Td, Tr, Text, Button } from "@chakra-ui/react"
 import { faAdd } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import React from "react"
+import React, { useEffect, useState } from "react"
+import axios from "axios"
 
 export const Educations = () => {
-  const colleges = [
-    "Гомельский государственный аграрно-экономический колледж",
-    "Гомельский государственный профессионально-технический колледж народных художеств",
-    "Гомельский торгово-экономический колледж",
-    "Гомельский государственный колледж искусств им. Н.Ф. Соколовского"
-  ]
-  const institutions = [
-    "Белорусский государственный университет информатики и радиоэлектроники",
-    "Белорусский торгово-экономический университет потребительской кооперации",
-    "Гомельский государственный университет им. Франциска Скорины",
-    "Белорусский государственный университет транспорта",
-  ]
+  const [universities, setUniversities] = useState<{ id: string; universityName: string }[]>([])
+  const [colleges, setColleges] = useState<{ id: string; collegeName: string }[]>([])
+
+  useEffect(() => {
+    axios(
+      "http://localhost:8080/colleges",
+      { headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+      }}
+    )
+      .then((res) => setColleges(res.data._embedded.collegesList))
+      .catch((err) => console.log(err))
+    axios(
+      "http://localhost:8080/universities",
+      { headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        }}
+    )
+      .then((res) => setUniversities(res.data._embedded.universitiesList))
+      .catch((err) => console.log(err))
+  }, [])
 
   return (
     <>
@@ -25,7 +39,7 @@ export const Educations = () => {
       <Flex direction="column" width="45%">
         <Flex flex={1} align="center" justify="space-between">
           <Text fontWeight="bold" fontSize="18px" textTransform="uppercase" color="#4A5568">Колледжи/Техникумы</Text>
-          <Button leftIcon={<FontAwesomeIcon icon={faAdd} />}>Добавить</Button>
+          {/*<Button leftIcon={<FontAwesomeIcon icon={faAdd} />}>Добавить</Button>*/}
         </Flex>
 
         <TableContainer
@@ -67,17 +81,13 @@ export const Educations = () => {
               {colleges.map((item) => {
                 return (
                   <Tr
-                    key={item}
-                    onClick={() => {
-                      // setEmployee(employee)
-                      // onOpen()
-                    }}
+                    key={item.id}
                     _hover={{
                       bg: "hookers_green",
                       cursor: "pointer",
                     }}
                   >
-                    <Td borderColor="dark_sea_green" fontSize="16px">{item}</Td>
+                    <Td borderColor="dark_sea_green" fontSize="16px" whiteSpace="break-spaces">{item.collegeName}</Td>
                   </Tr>
                 )
               })}
@@ -90,12 +100,12 @@ export const Educations = () => {
         <Flex direction="column">
           <Flex align="center" justify="space-between">
             <Text fontWeight="bold" fontSize="18px" textTransform="uppercase" color="#4A5568">Университеты</Text>
-            <Button leftIcon={<FontAwesomeIcon icon={faAdd} />}>Добавить</Button>
+            {/*<Button leftIcon={<FontAwesomeIcon icon={faAdd} />}>Добавить</Button>*/}
           </Flex>
 
           <TableContainer
             mt={10}
-            maxHeight="25vh"
+            maxHeight="60vh"
             overflowY="auto"
             sx={{
               "&::-webkit-scrollbar": {
@@ -119,9 +129,9 @@ export const Educations = () => {
           >
             <Table>
               <Tbody>
-                {institutions.map((item) => (
-                  <Tr key={item}>
-                    <Td borderColor="dark_sea_green">{item}</Td>
+                {universities.map((item) => (
+                  <Tr key={item.id}>
+                    <Td borderColor="dark_sea_green" whiteSpace="break-spaces">{item.universityName}</Td>
                   </Tr>
                 ))}
               </Tbody>

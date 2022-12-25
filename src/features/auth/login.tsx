@@ -24,7 +24,7 @@ export const Login = () => {
   const auth = (data: User) => {
     console.log(data)
     navigate("/home")
-
+    // TODO: авторизация пользователя
   }
 
   return (
@@ -43,9 +43,9 @@ export const Login = () => {
         px={10}
         width="25rem"
       >
-        <Alert variant="error" mb={4}>
-          <AlertDescription>Логин и/или пароль не совпадают</AlertDescription>
-        </Alert>
+        {/*<Alert variant="error" mb={4}>*/}
+        {/*  <AlertDescription>Логин и/или пароль не совпадают</AlertDescription>*/}
+        {/*</Alert>*/}
 
         <Stack spacing={5} direction="column" as="form" width="90%" onSubmit={handleSubmit(auth)} flex={1}>
           <FormControl>

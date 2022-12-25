@@ -23,8 +23,13 @@ export const Register = () => {
 
   const auth = (data: User) => {
     console.log(data)
+    const user = {
+      username: data.username,
+      password: data.password,
+      access: 3,
+    }
+    // TODO: добавление пользователя
     navigate("/home")
-
   }
 
   return (
@@ -43,9 +48,9 @@ export const Register = () => {
         px={10}
         width="25rem"
       >
-        <Alert variant="error" mb={4}>
-          <AlertDescription>Пользователь с таким именем уже существует</AlertDescription>
-        </Alert>
+        {/*<Alert variant="error" mb={4}>*/}
+        {/*  <AlertDescription>Пользователь с таким именем уже существует</AlertDescription>*/}
+        {/*</Alert>*/}
 
         <Stack spacing={5} direction="column" as="form" width="90%" onSubmit={handleSubmit(auth)} flex={1}>
           <FormControl>

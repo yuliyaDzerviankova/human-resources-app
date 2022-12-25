@@ -1,24 +1,19 @@
 import { Education } from "./Education"
 import { Family } from "./Family"
+import { Passport } from "./Passport"
 
 export type Employee = {
-  id: string
+  id: number
   surname: string
   firstName: string
   patronymic: string
-  bDay: string
-  birthPlace: string
+  bday: string
   mobPhone: string
   homePhone: string
-  passportNumber: string
-  dateReceipt: string
-  placeReceipt: string
-  passportAddress: string
-  actualAddress: string
-  nationality: string
+  passport: Passport
+  education: Education
   department: string
   position: string
-  offerDate: string
-  educations: Education[]
-  family: Family[]
+  employeesFamily: Family
+  dateOfReceipt: string
 }

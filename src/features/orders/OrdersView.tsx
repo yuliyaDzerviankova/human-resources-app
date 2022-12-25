@@ -1,30 +1,55 @@
-import {
-  Box,
-  Flex,
-  TableContainer,
-  Table,
-  Text,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Stack,
-  useDisclosure
-} from "@chakra-ui/react"
-import { faEllipsisVertical, faAdd } from "@fortawesome/free-solid-svg-icons"
-import { useNavigate } from "react-router-dom"
-import { Menu, RemoveModal } from "../../components"
-import { initEmployee } from "../../mocks/initialModels/initEmployee"
-import { orders } from "../../mocks/orders"
-import { ChangePositionModal } from "./change-position-modal"
-import { NewStaffTableModal } from "./new-staff-table-modal"
+import {Box, Flex, Stack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure} from "@chakra-ui/react"
+import {faAdd, faEllipsisVertical} from "@fortawesome/free-solid-svg-icons"
+import {useNavigate} from "react-router-dom"
+import {Menu, RemoveModal} from "../../components"
+import {initEmployee} from "../../mocks/initialModels/initEmployee"
+import {ChangePositionModal} from "./change-position-modal"
+import {NewStaffTableModal} from "./new-staff-table-modal"
+import {useEffect, useState} from "react"
+import axios from "axios"
+import moment from "moment";
+import {formatDate} from "../../constants"
 
 export const OrdersView = () => {
   const navigate = useNavigate()
+  const [orders, setOrders] = useState<{ id: string; type: string; dateOrder: string; info: string }[]>([])
   const { isOpen: isChangePositionOpen, onClose: onChangePositionClose, onOpen: onChangePositionOpen } = useDisclosure()
   const { isOpen: isNewStaffTableOpen, onOpen: onNewStaffTableOpen, onClose: onNewStaffTableClose } = useDisclosure()
   const { isOpen: isFiredOpen, onOpen: onFiredOpen, onClose: onFiredClose } = useDisclosure()
+
+  useEffect(() => {
+    axios(
+      "http://localhost:8080/documents",
+      { headers: {
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      } }
+    )
+    .then((response) => {
+      const data = response.data._embedded.documentList
+      // @ts-ignore
+      let ordersArray = []
+      // @ts-ignore
+      const ordersData = data.map((item) => {
+        // @ts-ignore
+        return item.orders.map((subItem) => {
+          return {
+            id: `${item.id}-${subItem.id}`,
+            type: item.documentName,
+            dateOrder: subItem.dateOrder,
+            info: subItem.info
+          }
+        })
+      })
+      // @ts-ignore
+      ordersData.map((item) => item.map((itemId) => ordersArray.push(itemId)))
+      // @ts-ignore
+      setOrders(ordersArray)
+    })
+    .catch((error) => console.log(error))
+
+  }, [])
 
   return (
     <>
@@ -78,18 +103,14 @@ export const OrdersView = () => {
                 return (
                   <Tr
                     key={order.id}
-                    onClick={() => {
-                      // setEmployee(employee)
-                      // onOpen()
-                    }}
                     _hover={{
                       bg: "hookers_green",
                       cursor: "pointer",
                     }}
                   >
-                    <Td borderColor="dark_sea_green" fontSize="16px">{order.type}</Td>
-                    <Td borderColor="dark_sea_green" fontSize="16px">{order.dateOrder}</Td>
-                    <Td borderColor="dark_sea_green" fontSize="16px">{order.info}</Td>
+                    <Td borderColor="dark_sea_green" fontSize="16px" whiteSpace="break-spaces">{order.type}</Td>
+                    <Td borderColor="dark_sea_green" fontSize="16px">{moment(order.dateOrder).format(formatDate)}</Td>
+                    <Td borderColor="dark_sea_green" fontSize="16px" whiteSpace="break-spaces">{order.info}</Td>
                   </Tr>
                 )
               })}

@@ -1,23 +1,19 @@
-import { Education } from "../../models"
+import { initEducation } from "./initEducation"
+import { initPassport } from "./initPassport"
+import { initFamily } from "./initFamily"
 
 export const initEmployee = {
-  id: "",
+  id: 0,
   surname: "",
   firstName: "",
   patronymic: "",
-  bDay: "",
-  birthPlace: "",
+  bday: "",
   mobPhone: "",
   homePhone: "",
-  passportNumber: "",
-  dateReceipt: "",
-  placeReceipt: "",
-  passportAddress: "",
-  actualAddress: "",
-  nationality: "",
+  passport: initPassport,
   department: "",
   position: "",
-  offerDate: "",
-  educations: [] as Education[],
-  family: [],
+  education: initEducation,
+  employeesFamily: initFamily,
+  dateOfReceipt: "",
 }

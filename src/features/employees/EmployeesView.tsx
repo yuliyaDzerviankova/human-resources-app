@@ -23,13 +23,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Employee } from "../../models"
-import { faEllipsisVertical, faAdd, faPen, faSearch, faFilter } from "@fortawesome/free-solid-svg-icons"
-import { employees } from "../../mocks/employees"
+import { faEllipsisVertical, faPen, faSearch, faFilter } from "@fortawesome/free-solid-svg-icons"
 import { EmployeeCardModal, Menu } from "../../components"
 import { departments } from "../../mocks/departments"
 import { positions } from "../../mocks/positions"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import axios from "axios"
+import moment from "moment"
 
 export const EmployeesView = () => {
   const navigate = useNavigate()
@@ -40,17 +40,19 @@ export const EmployeesView = () => {
   const [departmentFilter, setDepartmentFilter] = useState("")
   const [positionFilter, setPositionFilter] = useState("")
   const [search, setSearch] = useState("")
+  const [employees, setEmployees] = useState<Employee[]>([])
   const [employeesArray, setEmployeesArray] = useState<Employee[]>([])
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log(search)
     if (e.key === "Enter") {
       const searchArray = employees.filter((item) =>
         item.surname.toLocaleLowerCase().includes(search) ||
         item.firstName.toLocaleLowerCase().includes(search) ||
         item.patronymic.toLocaleLowerCase().includes(search) ||
-        item.department.toLocaleLowerCase().includes(search) ||
-        item.position.toLocaleLowerCase().includes(search) ||
-        item.offerDate.toLocaleLowerCase().includes(search)
+        // item.department.toLocaleLowerCase().includes(search) ||
+        // item.position.toLocaleLowerCase().includes(search) ||
+        moment(item.dateOfReceipt).format("DD/MM/YYYY").toLocaleLowerCase().includes(search)
       )
       setEmployeesArray(searchArray)
     }
@@ -84,10 +86,20 @@ export const EmployeesView = () => {
   }
 
   useEffect(() => {
-    axios("http://localhost:8080/employees").then((response) => console.log(response))
+    axios(
+      "http://localhost:8080/employees",
+      { headers: {
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      } }
+    )
+    .then((response) => {
+      setEmployees(response.data._embedded.employeeList)
+      setEmployeesArray(response.data._embedded.employeeList)
+    })
+    .catch((error) => console.log(error))
   }, [])
-
-  useEffect(() => setEmployeesArray(employees), [employees])
 
   return (
     <Stack height="100%">
@@ -107,7 +119,7 @@ export const EmployeesView = () => {
             />
           </InputGroup>
         </Box>
-        <Button leftIcon={<FontAwesomeIcon icon={faAdd} />} onClick={() => navigate("/addEmployee")}>Добавить сотрудника</Button>
+        {/*<Button leftIcon={<FontAwesomeIcon icon={faAdd} />} onClick={() => navigate("/addEmployee")}>Добавить сотрудника</Button>*/}
       </Flex>
 
       <Box p={4} />
@@ -262,7 +274,7 @@ export const EmployeesView = () => {
                   <Td borderColor="dark_sea_green" fontSize="16px">
                     {positions.find((item) => item.id === employee.position)?.name}
                   </Td>
-                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.offerDate}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">{moment(employee.dateOfReceipt).format("DD/MM/YYYY")}</Td>
                   <Td borderColor="dark_sea_green" onClick={(event) => event.stopPropagation}>
                     <Menu
                       menuButtonIcon={faEllipsisVertical}

@@ -1,5 +1,8 @@
+export type { Family } from "./Family"
+export type { FiredEmployee } from "./FiredEmployee"
 export type { Education } from "./Education"
 export type { Employee } from "./Employee"
 export type { Staffing } from "./Staffing"
 export { EducationKind } from "./educationKind"
 export { InstitutionName } from "./institutionName"
+export type { Passport } from "./Passport"

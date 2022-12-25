@@ -1,14 +1,19 @@
-import { Button, Flex, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { Button, Flex, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
 import React from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Employee } from "../../models"
+import moment from "moment"
+import { formatDate } from "../../constants"
+import { EducationChangesModal } from "../../features/employees/EducationChangesModal"
 
-type EducationProos = {
+type EducationProps = {
   employee: Employee
 }
 
-export const Education: React.FC<EducationProos> = ({employee}) => {
+export const Education: React.FC<EducationProps> = ({ employee }) => {
   const navigate = useNavigate()
+  const { education } = employee
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <Stack flex={1} height="100%">
@@ -45,7 +50,7 @@ export const Education: React.FC<EducationProos> = ({employee}) => {
           <Thead>
             <Tr>
               <Th borderColor="dark_sea_green">Образование</Th>
-              <Th borderColor="dark_sea_green">Название заведения</Th>
+              <Th borderColor="dark_sea_green" width="100px">Название заведения</Th>
               <Th borderColor="dark_sea_green">Документ</Th>
               <Th borderColor="dark_sea_green">Дата окончания</Th>
               <Th borderColor="dark_sea_green">Специальность</Th>
@@ -53,11 +58,11 @@ export const Education: React.FC<EducationProos> = ({employee}) => {
           </Thead>
           <Tbody>
             <Tr>
-              <Td borderColor="dark_sea_green">Среднее специальное</Td>
-              <Td borderColor="dark_sea_green">ГГАЭК</Td>
-              <Td borderColor="dark_sea_green">Диплом</Td>
-              <Td borderColor="dark_sea_green">30/06/2020</Td>
-              <Td borderColor="dark_sea_green">Техник-программист</Td>
+              <Td borderColor="dark_sea_green">{education.educationKind}</Td>
+              <Td borderColor="dark_sea_green" width="100px" whiteSpace="break-spaces">{education.institutionName}</Td>
+              <Td borderColor="dark_sea_green">{education.documentName}</Td>
+              <Td borderColor="dark_sea_green">{moment(education.finishDate).format(formatDate)}</Td>
+              <Td borderColor="dark_sea_green">{education.speciality}</Td>
             </Tr>
           </Tbody>
         </Table>
@@ -65,10 +70,11 @@ export const Education: React.FC<EducationProos> = ({employee}) => {
 
       <Flex flex={1} align="flex-end" justify="space-between" width="100%">
         <Flex align="center">
-          <Button mr={6} onClick={() => navigate("/educations")}>Учебные заведения</Button>
-          <Button>Добавить образование</Button>
+          <Link to="/educations" target="_blank">Учебные заведения</Link>
+          <Button ml={6} onClick={onOpen}>Добавить образование</Button>
         </Flex>
       </Flex>
+      <EducationChangesModal isEdit={true} employeeId={employee.id} isEducationOpen={isOpen} onEducationClose={onClose} />
     </Stack>
   )
 }

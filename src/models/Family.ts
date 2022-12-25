@@ -1,7 +1,7 @@
 export type Family = {
-  id: string
+  id: number
   surname: string
   firstName: string
-  bDay: string
-  relationDegree: string
+  bday: string
+  // relationDegree: string
 }

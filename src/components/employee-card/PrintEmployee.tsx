@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { Employee } from "../../models"
 import { useReactToPrint } from "react-to-print"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
-import { employees } from "../../mocks/employees"
+import axios from "axios"
 // import JsPDF from "jspdf"
 
 export const PrintEmployee = () => {
@@ -15,6 +15,7 @@ export const PrintEmployee = () => {
 
   const reactToPrintContent = useCallback(() => {
     return componentRef.current
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [componentRef.current])
 
   const handlePrint = useReactToPrint({
@@ -31,10 +32,20 @@ export const PrintEmployee = () => {
   //   report.html(elementToPrint).then(() => report.save("report.pdf"))
   // }
 
-
   useEffect(() => {
-    const employee = employees.find((item) => item.id === params.id) as Employee
-    setEmployee(employee)
+    axios(
+      `http://localhost:8080/employees/${params.id}`,
+      { headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        } }
+    )
+      .then((response) => {
+        const data = response.data._embedded.employeeList
+        setEmployee(data)
+      })
+      .catch((error) => console.log(error))
   }, [params.id])
   
   return (
@@ -81,41 +92,61 @@ export const PrintEmployee = () => {
 
             <Flex>
               <Text mr={4}>2. Дата рождения</Text>
-              <Text textDecoration="underline">{employee.bDay}</Text>
+              <Text textDecoration="underline">{employee.bday}</Text>
             </Flex>
             <Flex>
               <Text mr={4}>3. Место рождения</Text>
-              <Text textDecoration="underline">{employee.birthPlace}</Text>
+              <Text textDecoration="underline">{employee.passport.birthPlace}</Text>
             </Flex>
             <Flex>
               <Text mr={4}>4. Гражданство</Text>
-              <Text textDecoration="underline">{employee.nationality}</Text>
+              <Text textDecoration="underline">{employee.passport.nationality}</Text>
             </Flex>
             <Text mr={4}>5. Образование:</Text>
-            {employee.educations.map((item) => (
-              <>
-                <Flex>
-                  <Text mr={4}>А.</Text>
-                  <Flex direction="column">
-                    <Text textDecoration="underline">{item.institutionName}</Text>
-                    <Text textAlign="center">название и год окончания</Text>
-                  </Flex>
-                </Flex>
-                <Flex direction="column">
-                  <Text>{item.finishDate}</Text>
-                  <Box height="1px" background="black" width="90%" />
-                  <Text textAlign="center" mr={4}>учебного заведения</Text>
-                </Flex>
-                <Flex>
-                  <Text mr={4}>Специальность</Text>
-                  <Text textDecoration="underline">{item.speciality}</Text>
-                </Flex>
-                <Flex>
-                  <Text mr={4}>Документ об образовании</Text>
-                  <Text textDecoration="underline">{item.documentName}</Text>
-                </Flex>
-              </>
-            ))}
+            <Flex>
+              <Text mr={4}>А.</Text>
+              <Flex direction="column">
+                <Text textDecoration="underline">{employee.education.institutionName}</Text>
+                <Text textAlign="center">название и год окончания</Text>
+              </Flex>
+            </Flex>
+            <Flex direction="column">
+              <Text>{employee.education.finishDate}</Text>
+              <Box height="1px" background="black" width="90%" />
+              <Text textAlign="center" mr={4}>учебного заведения</Text>
+            </Flex>
+            <Flex>
+              <Text mr={4}>Специальность</Text>
+              <Text textDecoration="underline">{employee.education.speciality}</Text>
+            </Flex>
+            <Flex>
+              <Text mr={4}>Документ об образовании</Text>
+              <Text textDecoration="underline">{employee.education.documentName}</Text>
+            </Flex>
+            {/*{employee.educations.map((item) => (*/}
+            {/*  <>*/}
+            {/*    <Flex>*/}
+            {/*      <Text mr={4}>А.</Text>*/}
+            {/*      <Flex direction="column">*/}
+            {/*        <Text textDecoration="underline">{item.institutionName}</Text>*/}
+            {/*        <Text textAlign="center">название и год окончания</Text>*/}
+            {/*      </Flex>*/}
+            {/*    </Flex>*/}
+            {/*    <Flex direction="column">*/}
+            {/*      <Text>{item.finishDate}</Text>*/}
+            {/*      <Box height="1px" background="black" width="90%" />*/}
+            {/*      <Text textAlign="center" mr={4}>учебного заведения</Text>*/}
+            {/*    </Flex>*/}
+            {/*    <Flex>*/}
+            {/*      <Text mr={4}>Специальность</Text>*/}
+            {/*      <Text textDecoration="underline">{item.speciality}</Text>*/}
+            {/*    </Flex>*/}
+            {/*    <Flex>*/}
+            {/*      <Text mr={4}>Документ об образовании</Text>*/}
+            {/*      <Text textDecoration="underline">{item.documentName}</Text>*/}
+            {/*    </Flex>*/}
+            {/*  </>*/}
+            {/*))}*/}
             <Flex>
               <Text mr={4}>Б.</Text>
               <Flex direction="column">
@@ -169,41 +200,52 @@ export const PrintEmployee = () => {
             </Flex>
             <Text mr={4}>9. Семейное положение ______________________</Text>
             <Text mr={4}>10. Состав семьи</Text>
-            {employee.family.map((item) => (
-              <>
-                <Flex direction="column">
-                  <Text>{item.surname} {item.firstName}</Text>
-                  <Box height="1px" background="black" />
-                  <Text textAlign="center">степень родства и дата рождения</Text>
-                  <Text textAlign="center">каждого члена семьи</Text>
-                </Flex>
-                <Flex direction="column">
-                  <Text>{item.bDay} {item.relationDegree}</Text>
-                  <Box height="1px" background="black" />
-                </Flex>
-              </>
-            ))}
+            <Flex direction="column">
+              <Text>{employee.employeesFamily.surname} {employee.employeesFamily.firstName}</Text>
+              <Box height="1px" background="black" />
+              <Text textAlign="center">степень родства и дата рождения</Text>
+              <Text textAlign="center">каждого члена семьи</Text>
+            </Flex>
+            <Flex direction="column">
+              {/*<Text>{employee.employeesFamily.bDay} {employee.employeesFamily.relationDegree}</Text>*/}
+              <Text>{employee.employeesFamily.bday}</Text>
+              <Box height="1px" background="black" />
+            </Flex>
+            {/*{employee.family.map((item) => (*/}
+            {/*  <>*/}
+            {/*    <Flex direction="column">*/}
+            {/*      <Text>{item.surname} {item.firstName}</Text>*/}
+            {/*      <Box height="1px" background="black" />*/}
+            {/*      <Text textAlign="center">степень родства и дата рождения</Text>*/}
+            {/*      <Text textAlign="center">каждого члена семьи</Text>*/}
+            {/*    </Flex>*/}
+            {/*    <Flex direction="column">*/}
+            {/*      <Text>{item.bDay} {item.relationDegree}</Text>*/}
+            {/*      <Box height="1px" background="black" />*/}
+            {/*    </Flex>*/}
+            {/*  </>*/}
+            {/*))}*/}
             <Text>11. Документ, удостоверяющий личность</Text>
             <Text textDecoration="underline">паспорт</Text>
             <Flex>
               <Text mr={4}>серия и номер</Text>
-              <Text textDecoration="underline">{employee.passportNumber}</Text>
+              <Text textDecoration="underline">{employee.passport.passportNumber}</Text>
             </Flex>
             <Flex>
               <Text mr={4}>выдан</Text>
-              <Text textDecoration="underline">{employee.placeReceipt}</Text>
+              <Text textDecoration="underline">{employee.passport.placeReceipt}</Text>
             </Flex>
             <Flex>
               <Text mr={4}>дата выдачи</Text>
-              <Text textDecoration="underline">{employee.dateReceipt}</Text>
+              <Text textDecoration="underline">{employee.passport.dateReceipt}</Text>
             </Flex>
             <Flex direction="column">
               <Text>12. Адрес регистрации по месту жительства</Text>
-              <Text textDecoration="underline">{employee.passportAddress}</Text>
+              <Text textDecoration="underline">{employee.passport.passportAddress}</Text>
             </Flex>
             <Flex direction="column">
               <Text>13. Адрес фактического проживания</Text>
-              <Text textDecoration="underline">{employee.actualAddress}</Text>
+              <Text textDecoration="underline">{employee.passport.actualAddress}</Text>
             </Flex>
             <Flex>
               <Text mr={4}>14. Телефон</Text>

@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { EmployeesView } from "../../features/employees/EmployeesView"
 import { StaffingTableView } from "../../features/staffing-table/StaffingTableView"
-import { FiredEmployeesView } from "../../features/fired-empoyees/FiredEmployeesView"
+import { FiredEmployeesView } from "../../features/fired-employees/FiredEmployeesView"
 import { OrdersView } from "../../features/orders/OrdersView"
 
 export const Home = () => {

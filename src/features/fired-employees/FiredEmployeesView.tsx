@@ -8,10 +8,29 @@ import {
   Tbody,
   Td,
 } from "@chakra-ui/react"
-import React from "react"
-import { firedEmployees } from "../../mocks/firedEmployees"
+import React, {useEffect, useState} from "react"
+import { FiredEmployee } from "../../models"
+import axios from "axios"
 
 export const FiredEmployeesView = () => {
+  const [firedEmployees, setFiredEmployees] = useState<FiredEmployee[]>([])
+
+  useEffect(() => {
+    axios(
+      "http://localhost:8080/firedEmployees",
+      { headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        } }
+    )
+      .then((response) => {
+        const data = response.data._embedded.firedEmployeesList
+        setFiredEmployees(data)
+      })
+      .catch((error) => console.log(error))
+  }, [])
+
   return (
     <>
       <Box p={4} />
@@ -57,24 +76,19 @@ export const FiredEmployeesView = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {firedEmployees.map((employee) => {
-              return (
+            {firedEmployees.map((employee) => (
                 <Tr
                   key={employee.id}
-                  // onClick={() => {
-                  //   setEmployee(employee)
-                  //   onOpen()
-                  // }}
                   _hover={{
                     bg: "hookers_green",
                     cursor: "pointer",
                   }}
                 >
                   <Td borderColor="dark_sea_green" fontSize="16px">{employee.fio}</Td>
-                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.reason}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.info}</Td>
                 </Tr>
               )
-            })}
+            )}
           </Tbody>
         </Table>
       </TableContainer>

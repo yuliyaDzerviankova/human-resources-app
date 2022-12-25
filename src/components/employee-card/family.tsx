@@ -2,6 +2,8 @@ import { Button, Flex, Stack, Table, TableContainer, Tbody, Td, Th, Thead, Tr, u
 import React from "react"
 import { FamilyChangesModal } from "../../features/employees/FamilyChangesModal"
 import { Employee } from "../../models"
+import moment from "moment";
+import {formatDate} from "../../constants";
 
 type FamilyProps = {
   employee: Employee
@@ -24,9 +26,9 @@ export const Family: React.FC<FamilyProps> = ({ employee }) => {
           </Thead>
           <Tbody>
             <Tr>
-              <Td borderColor="dark_sea_green">Шишкова</Td>
-              <Td borderColor="dark_sea_green">Валентина</Td>
-              <Td borderColor="dark_sea_green">13/02/2001</Td>
+              <Td borderColor="dark_sea_green">{employee?.employeesFamily?.surname}</Td>
+              <Td borderColor="dark_sea_green">{employee?.employeesFamily?.firstName}</Td>
+              <Td borderColor="dark_sea_green">{moment(employee?.employeesFamily?.bday).format(formatDate)}</Td>
               <Td borderColor="dark_sea_green">Супруга</Td>
             </Tr>
           </Tbody>

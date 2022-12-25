@@ -1,29 +1,71 @@
-import React from "react"
-import { Flex, Box, TableContainer, Button, Table, Thead, Tr, Th, Td, Tbody, Text, Stack } from "@chakra-ui/react"
-import { faEllipsisVertical, faAdd, faPen, faTrash } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useNavigate } from "react-router-dom"
-import { Staffing } from "../../models"
-import { Menu } from "../../components"
+import React, { useEffect, useState } from "react"
+import { Flex, Box, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Text, Stack } from "@chakra-ui/react"
+import axios from "axios"
 
 export const StaffingTableView = () => {
-  const navigate = useNavigate()
-  const staffings: Staffing[] = [
-    { id: "1", departemnt: "Тестирования", position: "Тестировщик", discharge: "3" , salary: "500" },
-    { id: "2", departemnt: "Разработки", position: "Разработчик Back-End", discharge: "4" , salary: "700" },
-  ]
+  const [departments, setDepartments] = useState<{ id: string; name: string }[]>([])
+  const [positions, setPositions] = useState<{ id: string; name: string }[]>([])
+  const [staffings, setStaffings] = useState<{
+    id: string;
+    position: string;
+    discharge: string;
+    salary: string;
+  }[]>([])
 
-  const positions = [
-  { id: "1", name: "Директор" },
-  { id: "2", name: "Тестировщик" },
-  { id: "3", name: "Сорсер" },
-  ]
-
-  const departments = [
-    { id: "1", name: "Тестирования" },
-    { id: "2", name: "Разработки" },
-    { id: "3", name: "Рекрутинга" },
-    ]
+  useEffect(() => {
+    axios(
+      "http://localhost:8080/departments",
+      { headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        } }
+    )
+      .then((response) => {
+        const data = response.data._embedded.departmentList
+        // @ts-ignore
+        const departments = data.map((item) => ({ id: item.id, name: item.nameDepartment }))
+        setDepartments(departments)
+      })
+      .catch((error) => console.log(error))
+    axios(
+      "http://localhost:8080/positions",
+      { headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        } }
+    )
+      .then((response) => {
+        const data = response.data._embedded.positionsList
+        // @ts-ignore
+        const positions = data.map((item) => ({ id: item.id, name: item.positionName }))
+        setPositions(positions)
+      })
+      .catch((error) => console.log(error))
+    axios(
+      "http://localhost:8080/staffingTable",
+      { headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        } }
+    )
+      .then((response) => {
+        const data = response.data._embedded.staffingTableList
+        // @ts-ignore
+        const staffingTables = data.map((item) => ({
+          id: item.id,
+          position: "",
+          discharge: item.discharge,
+          salary: item.salary,
+        }))
+        // console.log(staffingTables)
+        setStaffings(staffingTables)
+        // setPositions(positions)
+      })
+      .catch((error) => console.log(error))
+  }, [])
 
   return (
     <>
@@ -33,7 +75,7 @@ export const StaffingTableView = () => {
         <Flex direction="column" width="55%">
           <Flex flex={1} align="center" justify="space-between">
             <Text fontWeight="bold" fontSize="18px" textTransform="uppercase" color="#4A5568">Штатное расписание</Text>
-            <Button leftIcon={<FontAwesomeIcon icon={faAdd} />} onClick={() => navigate("/addEmployee")}>Добавить единицу штатного расписания</Button>
+            {/*<Button leftIcon={<FontAwesomeIcon icon={faAdd} />} onClick={() => navigate("")}>Добавить единицу штатного расписания</Button>*/}
           </Flex>
 
           <TableContainer
@@ -73,11 +115,11 @@ export const StaffingTableView = () => {
             <Table>
               <Thead>
                 <Tr>
-                  <Th borderColor="dark_sea_green" fontSize="17px">Отдел</Th>
+                  {/*<Th borderColor="dark_sea_green" fontSize="17px">Отдел</Th>*/}
                   <Th borderColor="dark_sea_green" fontSize="17px">Должность</Th>
                   <Th borderColor="dark_sea_green" fontSize="17px">Разряд</Th>
                   <Th borderColor="dark_sea_green" fontSize="17px">Оклад, byn</Th>
-                  <Th borderColor="dark_sea_green" />
+                  {/*<Th borderColor="dark_sea_green" />*/}
                 </Tr>
               </Thead>
               <Tbody>
@@ -85,28 +127,24 @@ export const StaffingTableView = () => {
                   return (
                     <Tr
                       key={staffing.id}
-                      onClick={() => {
-                        // setEmployee(employee)
-                        // onOpen()
-                      }}
                       _hover={{
                         bg: "hookers_green",
                         cursor: "pointer",
                       }}
                     >
-                      <Td borderColor="dark_sea_green" fontSize="16px">{staffing.departemnt}</Td>
+                      {/*<Td borderColor="dark_sea_green" fontSize="16px">{staffing.departemnt}</Td>*/}
                       <Td borderColor="dark_sea_green" fontSize="16px">{staffing.position}</Td>
                       <Td borderColor="dark_sea_green" fontSize="16px">{staffing.discharge}</Td>
                       <Td borderColor="dark_sea_green" fontSize="16px">{staffing.salary}</Td>
-                      <Td borderColor="dark_sea_green">
-                        <Menu
-                          menuButtonIcon={faEllipsisVertical}
-                          menuItems={[
-                            { name: "Изменить", icon: faPen, onClick: () => {} },
-                            { name: "Удалить", icon: faTrash, onClick: () => {} },
-                          ]}
-                        />
-                      </Td>
+                      {/*<Td borderColor="dark_sea_green">*/}
+                      {/*  <Menu*/}
+                      {/*    menuButtonIcon={faEllipsisVertical}*/}
+                      {/*    menuItems={[*/}
+                      {/*      { name: "Изменить", icon: faPen, onClick: () => {} },*/}
+                      {/*      { name: "Удалить", icon: faTrash, onClick: () => {} },*/}
+                      {/*    ]}*/}
+                      {/*  />*/}
+                      {/*</Td>*/}
                     </Tr>
                   )
                 })}
@@ -119,7 +157,7 @@ export const StaffingTableView = () => {
           <Flex direction="column">
             <Flex align="center" justify="space-between">
               <Text fontWeight="bold" fontSize="18px" textTransform="uppercase" color="#4A5568">Должности</Text>
-              <Button leftIcon={<FontAwesomeIcon icon={faAdd} />}>Добавить должность</Button>
+              {/*<Button leftIcon={<FontAwesomeIcon icon={faAdd} />}>Добавить должность</Button>*/}
             </Flex>
 
             <TableContainer
@@ -151,15 +189,15 @@ export const StaffingTableView = () => {
                   {positions.map((position) => (
                     <Tr key={position.id}>
                       <Td borderColor="dark_sea_green">{position.name}</Td>
-                      <Td borderColor="dark_sea_green" textAlign="right">
-                      <Menu
-                        menuButtonIcon={faEllipsisVertical}
-                        menuItems={[
-                          { name: "Изменить", icon: faPen, onClick: () => {} },
-                          { name: "Удалить", icon: faTrash, onClick: () => {} },
-                        ]}
-                      />
-                    </Td>
+                      {/*<Td borderColor="dark_sea_green" textAlign="right">*/}
+                      {/*  <Menu*/}
+                      {/*    menuButtonIcon={faEllipsisVertical}*/}
+                      {/*    menuItems={[*/}
+                      {/*      { name: "Изменить", icon: faPen, onClick: () => {} },*/}
+                      {/*      { name: "Удалить", icon: faTrash, onClick: () => {} },*/}
+                      {/*    ]}*/}
+                      {/*  />*/}
+                      {/*</Td>*/}
                     </Tr>
                   ))}
                 </Tbody>
@@ -170,7 +208,7 @@ export const StaffingTableView = () => {
           <Flex direction="column">
             <Flex align="center" justify="space-between">
               <Text fontWeight="bold" fontSize="18px" textTransform="uppercase" color="#4A5568">Отделы</Text>
-              <Button leftIcon={<FontAwesomeIcon icon={faAdd} />}>Добавить отдел</Button>
+              {/*<Button leftIcon={<FontAwesomeIcon icon={faAdd} />}>Добавить отдел</Button>*/}
             </Flex>
 
             <TableContainer
@@ -199,18 +237,18 @@ export const StaffingTableView = () => {
             >
               <Table>
                 <Tbody>
-                  {departments.map((department) => (
+                  {departments.map((department: { id: string; name: string }) => (
                     <Tr key={department.id}>
                       <Td borderColor="dark_sea_green">{department.name}</Td>
-                      <Td borderColor="dark_sea_green" textAlign="right">
-                      <Menu
-                        menuButtonIcon={faEllipsisVertical}
-                        menuItems={[
-                          { name: "Изменить", icon: faPen, onClick: () => {} },
-                          { name: "Удалить", icon: faTrash, onClick: () => {} },
-                        ]}
-                      />
-                    </Td>
+                      {/*<Td borderColor="dark_sea_green" textAlign="right">*/}
+                      {/*  <Menu*/}
+                      {/*    menuButtonIcon={faEllipsisVertical}*/}
+                      {/*    menuItems={[*/}
+                      {/*      { name: "Изменить", icon: faPen, onClick: () => {} },*/}
+                      {/*      { name: "Удалить", icon: faTrash, onClick: () => {} },*/}
+                      {/*    ]}*/}
+                      {/*  />*/}
+                      {/*</Td>*/}
                     </Tr>
                   ))}
                 </Tbody>

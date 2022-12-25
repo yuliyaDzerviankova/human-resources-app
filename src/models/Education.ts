@@ -1,5 +1,5 @@
 export type Education = {
-  id: string
+  id: number
   educationKind: string
   institutionName: string
   documentName: string
