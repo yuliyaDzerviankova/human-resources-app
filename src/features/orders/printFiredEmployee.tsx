@@ -11,12 +11,13 @@ export const PrintFiredEmployee = () => {
 
   const reactToPrintContent = useCallback(() => {
     return componentRef.current
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [componentRef.current])
 
   const handlePrint = useReactToPrint({
     content: reactToPrintContent
   })
-  
+
   return (
     <Stack p={2}>
       <Flex align="center" justify="flex-end" width="100%" p={4}>

@@ -20,9 +20,9 @@ import {
   Stack
 } from "@chakra-ui/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import React, { ChangeEvent, useContext, useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Access, Employee } from "../../models"
+import { Employee } from "../../models"
 import { faPen, faSearch, faFilter } from "@fortawesome/free-solid-svg-icons"
 import { EmployeeCardModal, Menu } from "../../components"
 import { departments } from "../../mocks/departments"
@@ -30,7 +30,6 @@ import { positions } from "../../mocks/positions"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import axios from "axios"
 import moment from "moment"
-import { EmployeeContext } from "../providers/context"
 
 export const EmployeesView = () => {
   const navigate = useNavigate()
@@ -43,17 +42,15 @@ export const EmployeesView = () => {
   const [search, setSearch] = useState("")
   const [employees, setEmployees] = useState<Employee[]>([])
   const [employeesArray, setEmployeesArray] = useState<Employee[]>([])
-  const { state: { globalState: { user } } } = useContext(EmployeeContext)
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(search)
     if (e.key === "Enter") {
       const searchArray = employees.filter((item) =>
         item.surname.toLocaleLowerCase().includes(search) ||
         item.firstName.toLocaleLowerCase().includes(search) ||
         item.patronymic.toLocaleLowerCase().includes(search) ||
-        // item.department.toLocaleLowerCase().includes(search) ||
-        // item.position.toLocaleLowerCase().includes(search) ||
+        item.staffingTable.department.nameDepartment.toLocaleLowerCase().includes(search) ||
+        item.staffingTable.positions.positionName.toLocaleLowerCase().includes(search) ||
         moment(item.dateOfReceipt).format("DD/MM/YYYY").toLocaleLowerCase().includes(search)
       )
       setEmployeesArray(searchArray)
@@ -64,15 +61,14 @@ export const EmployeesView = () => {
   const filterPosition = (e: ChangeEvent<HTMLSelectElement>) => setPositionFilter(e.target.value)
 
   const applyFilter = () => {
-    const filterArray = employees.filter((item) => item.department === departmentFilter)
+    const filterArray = employees.filter((item) => item.staffingTable.department.nameDepartment === departmentFilter)
     setEmployeesArray(filterArray)
     setIsDepartmentFilter(false)
   }
 
   const applyPositionFilter = () => {
-    const filterArray = employees.filter((item) => item.position === positionFilter)
-    console.log(filterArray)
-    
+    const filterArray = employees.filter((item) => item.staffingTable.positions.positionName === positionFilter)
+
     setEmployeesArray(filterArray)
     setIsPositionFilter(false)
   }
@@ -86,11 +82,6 @@ export const EmployeesView = () => {
     setEmployeesArray(employees)
     setIsPositionFilter(false)
   }
-
-  useEffect(() => {
-    console.log(user)
-    console.log(Access.Local)
-  }, [user])
   
   useEffect(() => {
     axios(
@@ -102,8 +93,10 @@ export const EmployeesView = () => {
       } }
     )
     .then((response) => {
-      setEmployees(response.data._embedded.employeeList)
-      setEmployeesArray(response.data._embedded.employeeList)
+      const resData = response.data._embedded.employeeList
+      console.log(resData)
+      setEmployees(resData)
+      setEmployeesArray(resData)
     })
     .catch((error) => console.log(error))
   }, [])
@@ -274,12 +267,8 @@ export const EmployeesView = () => {
                 <Td borderColor="dark_sea_green" fontSize="16px">{employee.surname}</Td>
                 <Td borderColor="dark_sea_green" fontSize="16px">{employee.firstName}</Td>
                 <Td borderColor="dark_sea_green" fontSize="16px">{employee.patronymic}</Td>
-                <Td borderColor="dark_sea_green" fontSize="16px">
-                  {departments.find((item) => item.id === employee.department)?.name}
-                </Td>
-                <Td borderColor="dark_sea_green" fontSize="16px">
-                  {positions.find((item) => item.id === employee.position)?.name}
-                </Td>
+                <Td borderColor="dark_sea_green" fontSize="16px">{employee.staffingTable.department.nameDepartment}</Td>
+                <Td borderColor="dark_sea_green" fontSize="16px">{employee.staffingTable.positions.positionName}</Td>
                 <Td borderColor="dark_sea_green" fontSize="16px">{moment(employee.dateOfReceipt).format("DD/MM/YYYY")}</Td>
                 <Td borderColor="dark_sea_green" onClick={(event) => event.stopPropagation}>
                   <Menu

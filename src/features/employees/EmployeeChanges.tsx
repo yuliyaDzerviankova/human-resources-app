@@ -1,4 +1,19 @@
-import { Button, Flex, Input, Popover, PopoverArrow, PopoverBody, PopoverContent, PopoverTrigger, Select, Stack, Text, useDisclosure, VStack } from "@chakra-ui/react"
+import {
+  Button,
+  Flex,
+  Input,
+  InputGroup, InputLeftAddon,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+  Select,
+  Stack,
+  Text,
+  useDisclosure,
+  VStack
+} from "@chakra-ui/react"
 import React, { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { PageHeader, FormField } from "../../components"
@@ -14,7 +29,7 @@ import { PopToast } from "../../components/toaster/Toaster"
 import { EmployeeContext } from "../providers/context"
 import { Types } from "../providers/reducers"
 import axios from "axios"
-import { formatDate } from "../../constants"
+import { formatDate, newEmployeeOrder } from "../../constants"
 import { EmployeeType, getEmployeeObject, sendToPrint } from "./employeeChangesUtils"
 
 export const EmployeeChanges = () => {
@@ -28,17 +43,14 @@ export const EmployeeChanges = () => {
   const { dispatch } = useContext(EmployeeContext)
   const [departments, setDepartments] = useState<{ id: string; name: string }[]>([])
   const [positions, setPositions] = useState<{ id: string; name: string }[]>([])
+  const [document, setDocument] = useState<{ id: string; documentName: string }>({
+    id: "",
+    documentName: "",
+  })
 
   useEffect(() => {
     if (params.id) {
-      axios(
-        `http://localhost:8080/employees/${params.id}`,
-        { headers: {
-            "Access-Control-Allow-Credentials": true,
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          } }
-      )
+      axios(`http://localhost:8080/employees/${params.id}`)
         .then((response) => {
           setEmployee(response.data)
           setIsEdit(true)
@@ -96,8 +108,8 @@ export const EmployeeChanges = () => {
       passportAddress: employee.passport.passportAddress ?? "",
       actualAddress: employee.passport.actualAddress ?? "",
       nationality: employee.passport.nationality ?? "",
-      department: employee.department ?? "",
-      position: employee.position ?? "",
+      department: employee.staffingTable.department.nameDepartment ?? "",
+      position: employee.staffingTable.positions.positionName ?? "",
       offerDate: employee.dateOfReceipt ?? "",
     },
   })
@@ -108,14 +120,7 @@ export const EmployeeChanges = () => {
 
   useEffect(() => {
     if (watchDepartment) {
-      axios(
-        `http://localhost:8080/positions/filter_by_department/${watchDepartment}`,
-        { headers: {
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        } }
-      )
+      axios(`http://localhost:8080/positions/filter_by_department/${watchDepartment}`,)
         .then((res) => {
           const positions = res.data._embedded.positionsList
           // @ts-ignore
@@ -127,13 +132,7 @@ export const EmployeeChanges = () => {
   }, [watchDepartment])
 
   useEffect(() => {
-    axios("http://localhost:8080/departments", {
-      headers: {
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      }
-    })
+    axios("http://localhost:8080/departments")
       .then((res) => {
         const departments = res.data._embedded.departmentList
         // @ts-ignore
@@ -141,26 +140,35 @@ export const EmployeeChanges = () => {
         setDepartments(arr)
       })
       .catch((err) => console.log(err))
+    axios("http://localhost:8080/documents/1")
+      .then((res) => {
+        const document = {
+          id: res.data.id,
+          documentName: res.data.documentName,
+        }
+        setDocument(document)
+      })
   }, [])
 
   const addEmployee = async () => {
     const object = getValues()
     const sendObject = await getEmployeeObject(object)
-    console.log(sendObject)
-    sendPrint()
-    axios.post("http://localhost:8080/employees/create", sendObject, { headers: {
-        "Accept": "application/json, application/*+json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-        // "Content-Type": "application/x-www-form-urlencoded"
-      }
-    }).then((res) => {
+
+    const position = positions.find((item) => +item.id === +object.position) as { id: string; name: string }
+    const department = departments.find((item) => +item.id === +object.department) as { id: string; name: string }
+    const fio = `${sendObject.surname} ${sendObject.firstName.slice(0, 1)}.${sendObject.patronymic.slice(0, 1)}`
+    const order = {
+      dateOrder: data,
+      info: newEmployeeOrder(fio, department.name, position.name),
+      documents: document,
+    }
+    axios.post("http://localhost:8080/employees/create", sendObject).then((res) => {
       PopToast("Сообщение", "Сотрудник добавлен", "success")
-      sendPrint()
       onEducationOpen()
+      sendPrint()
+      axios.post("http://localhost:8080/orders/create", order)
+        .then((res) => console.log(res))
     }).catch((err) => {
-      console.log(err)
       PopToast(err.message, err.response.data.error, "error")
     })
     // TODO: добвление сотрудника
@@ -205,8 +213,8 @@ export const EmployeeChanges = () => {
       setValue("passportAddress", employee.passport.passportAddress)
       setValue("actualAddress", employee.passport.actualAddress)
       setValue("nationality", employee.passport.nationality)
-      setValue("department", employee.department)
-      setValue("position", employee.position)
+      setValue("department", employee.staffingTable.department.nameDepartment)
+      setValue("position", employee.staffingTable.positions.positionName)
       setValue("offerDate", moment(employee.dateOfReceipt).format(formatDate))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -274,7 +282,16 @@ export const EmployeeChanges = () => {
             tootlipLabel=""
             {...formFieldProps}
           >
-            <Input />
+            <InputGroup>
+              <InputLeftAddon
+                children="+375"
+                background="white"
+                borderWidth={1}
+                borderColor="brown"
+                height="44px"
+              />
+              <Input type="tel" maxLength={9} />
+            </InputGroup>
           </FormField>
 
           <FormField<EmployeeType>
@@ -283,7 +300,16 @@ export const EmployeeChanges = () => {
             tootlipLabel=""
             {...formFieldProps}
           >
-            <Input />
+            <InputGroup>
+              <InputLeftAddon
+                children="+375232"
+                background="white"
+                borderWidth={1}
+                borderColor="brown"
+                height="44px"
+              />
+              <Input type="tel" maxLength={6} />
+            </InputGroup>
           </FormField>
         </Stack>
 
@@ -294,7 +320,16 @@ export const EmployeeChanges = () => {
             tootlipLabel=""
             {...formFieldProps}
           >
-            <Input />
+          <InputGroup>
+            <InputLeftAddon
+              children="  HB"
+              background="white"
+              borderWidth={1}
+              borderColor="brown"
+              height="44px"
+            />
+            <Input maxLength={7} />
+          </InputGroup>
           </FormField>
 
           <FormField<EmployeeType>

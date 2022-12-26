@@ -14,52 +14,48 @@ import { PrintChangePosition } from "./features/orders/printChangePosition"
 import { PrintFiredEmployee } from "./features/orders/printFiredEmployee"
 import { PrintNewStaffTable } from "./features/orders/printNewStaffTable"
 import axios from "axios"
-import { EmployeeContext } from "./features/providers/context"
 import { Types } from "./features/providers/reducers"
+import { EmployeeContext } from "./features/providers/context"
 
 const App = () => {
   const { setColorMode } = useColorMode()
   const navigate = useNavigate()
   const location = useLocation()
-  const { state: { globalState: { user } }, dispatch } = useContext(EmployeeContext)
+  const { dispatch } = useContext(EmployeeContext)
+  const [user, setUser] = useState<{ id: string; access: string; login: string }>({
+    id: "",
+    access: "",
+    login: "",
+  })
 
-  const [login, setLogin] = useState("")
-  const [id, setId] = useState("")
-
-  useEffect(() => {
-    if (user.id) {
-      setLogin(user.login)
-    } else {
-      axios("http://localhost:8080/users/last")
-      .then((res) => {
-        setLogin(res.data.login)
-        setId(res.data.id)
-      })
-      .catch((err) => console.log(err))
-    }
-  }, [])
-  
-
-  useEffect(() => {
+  useEffect(() => {    
+    const storage = sessionStorage.getItem("userId") || ""
+    const id = storage && JSON.parse(storage)
     if (id) {
       axios(`http://localhost:8080/users/${id}`)
       .then((res) => {
-        const resData = res.data
-        const obj = {
+        const resData: { id: string; access: string; login: string } = res.data
+        const obj: { id: string; access: string; login: string } = {
           id: id,
-          accessId: resData.id, 
+          access: resData.id, 
           login: resData.login
         }
-
+        setUser(obj)
         // @ts-ignore
         dispatch({ type: Types.SetUser, payload: { obj } })
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err)) 
     }
-  }, [id]) 
+  }, [location])
+  
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setColorMode("light"), [])
+
+  const logout = () => {
+    sessionStorage.clear()
+    navigate("/")
+  }
 
   const routes = useRoutes([
     { path: "/", element: <Login /> },
@@ -90,14 +86,14 @@ const App = () => {
               fontSize="14px"
               pr={5}
             >
-              {login}
+              {user.login}
             </Text>
             <Link
               _hover={{
                 textDecoration: "underline",
                 textDecorationColor: "ash_gray"
               }}
-              onClick={() => navigate("/")}
+              onClick={logout}
               fontSize="14px"
               ml={5}
               display="flex"

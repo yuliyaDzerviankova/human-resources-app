@@ -16,14 +16,7 @@ export const FiredEmployeesView = () => {
   const [firedEmployees, setFiredEmployees] = useState<FiredEmployee[]>([])
 
   useEffect(() => {
-    axios(
-      "http://localhost:8080/firedEmployees",
-      { headers: {
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        } }
-    )
+    axios("http://localhost:8080/firedEmployees")
       .then((response) => {
         const data = response.data._embedded.firedEmployeesList
         setFiredEmployees(data)

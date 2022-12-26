@@ -1,12 +1,10 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Alert, AlertDescription, Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Tooltip } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
-import { EmployeeContext } from "../providers/context"
-import { Types } from "../providers/reducers"
 
 type User = {
   login: string
@@ -16,7 +14,6 @@ type User = {
 export const Login = () => {
   const navigate = useNavigate()
   const [isError, setIsError] = useState(false)
-  const { dispatch } = useContext(EmployeeContext)
   const loginSchema = z.object({
     login: z.string().nonempty({ message: "Пожалуйста введите логин" }),
     password: z.string().nonempty({ message: "Пожалуйста введите пароль" }),
@@ -30,13 +27,7 @@ export const Login = () => {
     axios.post("http://localhost:8080/users/login", data)
     .then((res) => {
       if (res.status === 200) {
-        const userData = {
-          id: res.data.id,
-          login: res.data.login,
-          accessId: res.data.access
-        }
-        // @ts-ignore
-        dispatch({ type: Types.SetUser, payload: { ...userData } })
+        sessionStorage.setItem("userId", JSON.stringify(res.data.id))
         navigate("/home")
       }
     })

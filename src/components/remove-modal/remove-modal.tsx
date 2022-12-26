@@ -17,10 +17,9 @@ import {
   Stack,
   Text
 } from "@chakra-ui/react"
-import React, { useContext } from "react"
+import React, {useContext, useEffect, useState} from "react"
 import { useNavigate } from "react-router-dom"
 import { EmployeeContext } from "../../features/providers/context"
-import { employees } from "../../mocks/employees"
 
 import { fireReasons } from "../../mocks/fireReasons"
 import { Employee } from "../../models"
@@ -29,11 +28,14 @@ import * as z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Types } from "../../features/providers/reducers"
+import { firedEmployeeOrder } from "../../constants"
+import axios from "axios"
+import { initEmployee } from "../../mocks/initialModels/initEmployee"
+import moment from "moment";
 
 type RemoveModalProps = {
   isOpen: boolean
   onClose: () => void
-  employee: Employee
   isFromOrder?: boolean
 }
 
@@ -46,11 +48,16 @@ type FiredEmployee = {
 export const RemoveModal: React.FC<RemoveModalProps> = ({
   isOpen,
   onClose,
-  employee,
   isFromOrder = false,
 }) => {
   const navigate = useNavigate()
   const { dispatch } = useContext(EmployeeContext)
+  const [employees, setEmployees] = useState<{ id: string; surname: string }[]>([])
+  const [employee, setEmployee] = useState<Employee>(initEmployee)
+  const [document, setDocument] = useState<{ id: string; documentName: string }>({
+    id: "",
+    documentName: "",
+  })
 
   const schema = z.object({
     employeeId: z.string(),
@@ -62,6 +69,7 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
     formState: { errors },
     register,
     getValues,
+    watch,
   } = useForm<FiredEmployee>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -72,10 +80,59 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
     }
   })
 
+  const watchEmployee = watch("employeeId")
   const formFieldProps = { errors, register }
 
+  useEffect(() => {
+    axios("http://localhost:8080/employees")
+      .then((res) => {
+        const employees = res.data._embedded.employeeList.map((item: Employee) => ({ id: item.id, surname: item.surname }))
+        setEmployees(employees)
+      })
+    axios("http://localhost:8080/documents/2")
+      .then((res) => {
+        const document = {
+          id: res.data.id,
+          documentName: res.data.documentName,
+        }
+        setDocument(document)
+      })
+  }, [])
+
+  useEffect(() => {
+    if (watchEmployee) {
+      axios(`http://localhost:8080/employees/${watchEmployee}`)
+        .then((res) => setEmployee(res.data))
+    }
+  }, [watchEmployee])
+
+  const firedEmployee = () => {
+    const fio = `${employee.surname} ${employee.firstName.slice(0, 1)}.${employee.patronymic.slice(0, 1)}.`
+    const order = {
+      dateOrder: moment(getValues().fireDate).format("YYYY-MM-DD"),
+      info: firedEmployeeOrder(fio, getValues().reasonId),
+      documents: document,
+    }
+    axios.delete(`http://localhost:8080/employees/delete/${employee.id}`)
+      .then(() => {
+        axios.post(
+          "http://localhost:8080/firedEmployees/create",
+          {
+            fio,
+            info: order.info,
+          }
+        ).then(() => {
+          axios.post("http://localhost:8080/orders/create", order)
+            .then(() => printOrder())
+        })
+      })
+  }
+
   const printOrder = () => {
-    const firedEmployee = getValues()
+    const firedEmployee = {
+      ...getValues(),
+      employeeId: `${employee.surname} ${employee.firstName.slice(0, 1)}.${employee.patronymic.slice(0, 1)}.`,
+    }
     // @ts-ignore
     dispatch({ type: Types.SetFiredEmployee, payload: { firedEmployee } })
     navigate("/printFiredEmployee")
@@ -98,7 +155,7 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
                 <Select background="ash_grey" borderColor="#353535">
                   <option value="" disabled>Выберите сотрудника</option>
                   {employees.map((item) => (
-                    <option key={item.id}>{item.surname}</option>
+                    <option key={item.id} value={item.id}>{item.surname}</option>
                   ))}
                 </Select>
                 ) : (
@@ -150,7 +207,7 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
                 >
                   Нет
                 </Button>
-                <Button onClick={printOrder}>Да</Button>
+                <Button onClick={firedEmployee}>Да</Button>
               </Flex>
             </PopoverBody>
           </PopoverContent>

@@ -1,6 +1,7 @@
 import { Education } from "./Education"
 import { Family } from "./Family"
 import { Passport } from "./Passport"
+import { StaffingTable } from "./StaffingTable"
 
 export type Employee = {
   id: number
@@ -12,8 +13,7 @@ export type Employee = {
   homePhone: string
   passport: Passport
   education: Education
-  department: string
-  position: string
+  staffingTable: StaffingTable
   employeesFamily: Family
   dateOfReceipt: string
 }

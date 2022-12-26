@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { Flex, Box, TableContainer, Table, Thead, Tr, Th, Td, Tbody, Text, Stack } from "@chakra-ui/react"
 import axios from "axios"
+import { StaffingTable } from "../../models/StaffingTable"
 
 export const StaffingTableView = () => {
   const [departments, setDepartments] = useState<{ id: string; name: string }[]>([])
   const [positions, setPositions] = useState<{ id: string; name: string }[]>([])
-  const [staffings, setStaffings] = useState<{
-    id: string;
-    position: string;
-    discharge: string;
-    salary: string;
-  }[]>([])
+  const [staffings, setStaffings] = useState<StaffingTable[]>([])
 
   useEffect(() => {
     axios(
@@ -56,9 +52,17 @@ export const StaffingTableView = () => {
         })
         // @ts-ignore
         staffingsData.map((item) => item.map((itemId) => staffingsArray.push(itemId)))
-        setStaffings(staffingsArray)
+        // setStaffings(staffingsArray)
       })
       .catch((error) => console.log(error))
+  }, [])
+
+  useEffect(() => {
+    axios("http://localhost:8080/staffingTable")
+      .then((res) => {
+        const resData = res.data
+        setStaffings(resData)
+      })
   }, [])
 
   return (
@@ -109,7 +113,7 @@ export const StaffingTableView = () => {
             <Table>
               <Thead>
                 <Tr>
-                  {/*<Th borderColor="dark_sea_green" fontSize="17px">Отдел</Th>*/}
+                  <Th borderColor="dark_sea_green" fontSize="17px">Отдел</Th>
                   <Th borderColor="dark_sea_green" fontSize="17px">Должность</Th>
                   <Th borderColor="dark_sea_green" fontSize="17px">Разряд</Th>
                   <Th borderColor="dark_sea_green" fontSize="17px">Оклад, byn</Th>
@@ -126,8 +130,8 @@ export const StaffingTableView = () => {
                         cursor: "pointer",
                       }}
                     >
-                      {/*<Td borderColor="dark_sea_green" fontSize="16px">{staffing.departemnt}</Td>*/}
-                      <Td borderColor="dark_sea_green" fontSize="16px">{staffing.position}</Td>
+                      <Td borderColor="dark_sea_green" fontSize="16px">{staffing.department.nameDepartment}</Td>
+                      <Td borderColor="dark_sea_green" fontSize="16px">{staffing.positions.positionName}</Td>
                       <Td borderColor="dark_sea_green" fontSize="16px">{staffing.discharge}</Td>
                       <Td borderColor="dark_sea_green" fontSize="16px">{staffing.salary}</Td>
                       {/*<Td borderColor="dark_sea_green">*/}

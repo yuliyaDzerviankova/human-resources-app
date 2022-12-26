@@ -1,8 +1,7 @@
 import { Box, Flex, Stack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
-import { faAdd } from "@fortawesome/free-solid-svg-icons"
+import { faPrint, faAdd } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from "react-router-dom"
 import { Menu, RemoveModal } from "../../components"
-import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import { ChangePositionModal } from "./change-position-modal"
 import { NewStaffTableModal } from "./new-staff-table-modal"
 import { useEffect, useState } from "react"
@@ -54,7 +53,7 @@ export const OrdersView = () => {
       <Flex align="flex-start" justify="space-between" flex={1}>
         <TableContainer
           mr={6}
-          width="50%"
+          width="55%"
           display="flex"
           justifyContent="center"
           fontSize="20px"
@@ -93,6 +92,7 @@ export const OrdersView = () => {
                 <Th borderColor="dark_sea_green" fontSize="18px">Вид приказа</Th>
                 <Th borderColor="dark_sea_green" fontSize="18px">Дата приказа</Th>
                 <Th borderColor="dark_sea_green" fontSize="18px">Информация</Th>
+                {/*<Th borderColor="dark_sea_green" fontSize="18px" />*/}
               </Tr>
             </Thead>
             <Tbody>
@@ -107,6 +107,13 @@ export const OrdersView = () => {
                   <Td borderColor="dark_sea_green" fontSize="16px" whiteSpace="break-spaces">{order.type}</Td>
                   <Td borderColor="dark_sea_green" fontSize="16px">{moment(order.dateOrder).format(formatDate)}</Td>
                   <Td borderColor="dark_sea_green" fontSize="16px" whiteSpace="break-spaces">{order.info}</Td>
+                  {/*<Td borderColor="dark_sea_green" fontSize="16px">*/}
+                  {/*  <Menu*/}
+                  {/*    menuItems={[*/}
+                  {/*      { name: "Печать", icon: faPrint, onClick: () => onFiredOpen() },*/}
+                  {/*    ]}*/}
+                  {/*  />*/}
+                  {/*</Td>*/}
                 </Tr>
               ))}
             </Tbody>
@@ -190,7 +197,7 @@ export const OrdersView = () => {
       </Flex>
       <ChangePositionModal isOpen={isChangePositionOpen} onClose={onChangePositionClose} />
       <NewStaffTableModal isOpen={isNewStaffTableOpen} onClose={onNewStaffTableClose} />
-      <RemoveModal isOpen={isFiredOpen} onClose={onFiredClose} isFromOrder={true} employee={initEmployee} />
+      <RemoveModal isOpen={isFiredOpen} onClose={onFiredClose} isFromOrder={true} />
     </>
   )
 }

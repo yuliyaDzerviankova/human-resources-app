@@ -67,7 +67,6 @@ export const EmployeeCardModal: React.FC<EmployeeCardModalProps> = ({ isOpen, on
         </ModalContent>
       </Modal>
       <RemoveModal
-        employee={employee}
         isOpen={isRemoveOpen}
         onClose={onRemoveClose}
       />

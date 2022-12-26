@@ -11,8 +11,20 @@ export const initEmployee = {
   mobPhone: "",
   homePhone: "",
   passport: initPassport,
-  department: "",
-  position: "",
+  staffingTable: {
+    id: 0,
+    discharge: 0,
+    salary: 0,
+    department: {
+      id: "",
+      nameDepartment: "",
+      infoAbtDepartment: ""
+    },
+    positions: {
+      id: "",
+      positionName: ""
+    },
+  },
   education: initEducation,
   employeesFamily: initFamily,
   dateOfReceipt: "",

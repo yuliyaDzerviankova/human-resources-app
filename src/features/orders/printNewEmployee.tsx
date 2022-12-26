@@ -45,6 +45,7 @@ export const PrintNewEmployee = () => {
 
         <Box p={2} />
 
+
         <Text>{newEmployee.employee} на должность {newEmployee.position} в отдел {newEmployee.department} с {newEmployee.date} с заработной платой согласно штатному расписанию.</Text>
 
         <Box p={4} />

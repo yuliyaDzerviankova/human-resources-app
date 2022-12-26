@@ -130,7 +130,13 @@ export const Educations = () => {
             <Table>
               <Tbody>
                 {universities.map((item) => (
-                  <Tr key={item.id}>
+                  <Tr
+                    key={item.id}
+                    _hover={{
+                      bg: "hookers_green",
+                      cursor: "pointer",
+                    }}
+                  >
                     <Td borderColor="dark_sea_green" whiteSpace="break-spaces">{item.universityName}</Td>
                   </Tr>
                 ))}

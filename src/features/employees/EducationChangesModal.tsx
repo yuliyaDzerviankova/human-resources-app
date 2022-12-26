@@ -2,7 +2,7 @@ import {
   Button,
   Input,
   Modal,
-  ModalBody,
+  ModalBody, ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -126,6 +126,7 @@ export const EducationChangesModal: React.FC<EducationChangesModalProps> = ({
     <Modal isOpen={isEducationOpen} onClose={onEducationClose} size="3xl" isCentered closeOnOverlayClick={false}>
       <ModalOverlay />
       <ModalContent bg="ash_gray" borderRadius={20} px={8}>
+        {isEdit && <ModalCloseButton />}
         <ModalHeader display="flex" alignItems="center" justifyContent="space-between" pr="3.5rem" fontSize="18px" pt={5}>
           <Text fontSize="24px" px={4}>Образование сотрудника</Text>
         </ModalHeader>
