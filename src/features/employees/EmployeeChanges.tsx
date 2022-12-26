@@ -15,33 +15,7 @@ import { EmployeeContext } from "../providers/context"
 import { Types } from "../providers/reducers"
 import axios from "axios"
 import { formatDate } from "../../constants"
-
-type EmployeeType = {
-  id: string
-  surname: string
-  firstName: string
-  patronymic: string
-  bDay: string
-  mobPhone: string
-  homePhone: string
-  passportId: number
-  actualAddress: string
-  birthPlace: string
-  dateReceipt: string
-  nationality: string
-  passportAddress: string
-  passportNumber: string
-  placeReceipt: string
-  educationId: string
-  educationKind: string
-  institutionName: string
-  documentName: string
-  finishDate: string
-  speciality: string
-  department: string
-  position: string
-  offerDate: string
-}
+import { EmployeeType, getEmployeeObject, sendToPrint } from "./employeeChangesUtils"
 
 export const EmployeeChanges = () => {
   const params = useParams()
@@ -73,16 +47,9 @@ export const EmployeeChanges = () => {
     }
   }, [params.id])
 
-  const sendToPrint = () => {
+  const sendPrint = () => {
     const object = getValues()
-    const position = positions.find((item) => +item.id === +object.position) as { id: string; name: string }
-    const department = departments.find((item) => +item.id === +object.department) as { id: string; name: string }
-    const newEmployee = {
-      employee: object.surname,
-      position: position.name,
-      department: department.name,
-      date: data,
-    }
+    const newEmployee = sendToPrint(object, positions, departments)
     // @ts-ignore
     dispatch({ type: Types.SetNewEmployee, payload: { newEmployee } })
   }
@@ -142,7 +109,7 @@ export const EmployeeChanges = () => {
   useEffect(() => {
     if (watchDepartment) {
       axios(
-        `http://localhost:8080/positions/by_department${watchDepartment}`,
+        `http://localhost:8080/positions/filter_by_department/${watchDepartment}`,
         { headers: {
           "Access-Control-Allow-Credentials": true,
           "Access-Control-Allow-Origin": "*",
@@ -176,30 +143,11 @@ export const EmployeeChanges = () => {
       .catch((err) => console.log(err))
   }, [])
 
-  const addEmployee = () => {
+  const addEmployee = async () => {
     const object = getValues()
-    const sendObject = {
-      surname: object.surname,
-      firstName: object.firstName,
-      patronymic: object.patronymic,
-      bday: object.bDay,
-      mobPhone: object.mobPhone,
-      homePhone: object.homePhone,
-      passport: {
-        actualAddress: object.actualAddress,
-        birthPlace: object.birthPlace,
-        dateReceipt: object.dateReceipt,
-        nationality: object.nationality,
-        passportAddress: object.passportAddress,
-        passportNumber: object.passportNumber,
-        placeReceipt: object.placeReceipt,
-      },
-      // department: object.department,
-      // position: object.position,
-      dateOfReceipt: data,
-    }
+    const sendObject = await getEmployeeObject(object)
     console.log(sendObject)
-    sendToPrint()
+    sendPrint()
     axios.post("http://localhost:8080/employees/create", sendObject, { headers: {
         "Accept": "application/json, application/*+json",
         "Access-Control-Allow-Credentials": true,
@@ -209,7 +157,7 @@ export const EmployeeChanges = () => {
       }
     }).then((res) => {
       PopToast("Сообщение", "Сотрудник добавлен", "success")
-      sendToPrint()
+      sendPrint()
       onEducationOpen()
     }).catch((err) => {
       console.log(err)
@@ -271,7 +219,7 @@ export const EmployeeChanges = () => {
       />
       <Flex width="100%" align="center" justify="flex-end" pr={4}>
         <Text fontWeight="bold" mr={4}>Дата приёма на работу: </Text>
-        <Text>{isEdit ? moment(employee.dateOfReceipt).format(formatDate) : data}</Text>
+        <Text>{isEdit ? moment(employee.dateOfReceipt).format(formatDate) : moment(data).format(formatDate)}</Text>
       </Flex>
       <Flex flex={1} p={4} width="100%" justifyContent="space-between">
         <Stack spacing={4} width="45%">
