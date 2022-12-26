@@ -23,7 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Employee } from "../../models"
-import { faEllipsisVertical, faPen, faSearch, faFilter } from "@fortawesome/free-solid-svg-icons"
+import { faPen, faSearch, faFilter } from "@fortawesome/free-solid-svg-icons"
 import { EmployeeCardModal, Menu } from "../../components"
 import { departments } from "../../mocks/departments"
 import { positions } from "../../mocks/positions"
@@ -252,40 +252,37 @@ export const EmployeesView = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {employeesArray.map((employee) => {
-              return (
-                <Tr
-                  key={employee.id}
-                  onClick={() => {
-                    setEmployee(employee)
-                    onOpen()
-                  }}
-                  _hover={{
-                    bg: "hookers_green",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.surname}</Td>
-                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.firstName}</Td>
-                  <Td borderColor="dark_sea_green" fontSize="16px">{employee.patronymic}</Td>
-                  <Td borderColor="dark_sea_green" fontSize="16px">
-                    {departments.find((item) => item.id === employee.department)?.name}
-                  </Td>
-                  <Td borderColor="dark_sea_green" fontSize="16px">
-                    {positions.find((item) => item.id === employee.position)?.name}
-                  </Td>
-                  <Td borderColor="dark_sea_green" fontSize="16px">{moment(employee.dateOfReceipt).format("DD/MM/YYYY")}</Td>
-                  <Td borderColor="dark_sea_green" onClick={(event) => event.stopPropagation}>
-                    <Menu
-                      menuButtonIcon={faEllipsisVertical}
-                      menuItems={[
-                        { name: "Изменить", icon: faPen, onClick: () => navigate(`/editEmployee/${employee.id}`) },
-                      ]}
-                    />
-                  </Td>
-                </Tr>
-              )
-            })}
+            {employeesArray.map((employee) => (
+              <Tr
+                key={employee.id}
+                onClick={() => {
+                  setEmployee(employee)
+                  onOpen()
+                }}
+                _hover={{
+                  bg: "hookers_green",
+                  cursor: "pointer",
+                }}
+              >
+                <Td borderColor="dark_sea_green" fontSize="16px">{employee.surname}</Td>
+                <Td borderColor="dark_sea_green" fontSize="16px">{employee.firstName}</Td>
+                <Td borderColor="dark_sea_green" fontSize="16px">{employee.patronymic}</Td>
+                <Td borderColor="dark_sea_green" fontSize="16px">
+                  {departments.find((item) => item.id === employee.department)?.name}
+                </Td>
+                <Td borderColor="dark_sea_green" fontSize="16px">
+                  {positions.find((item) => item.id === employee.position)?.name}
+                </Td>
+                <Td borderColor="dark_sea_green" fontSize="16px">{moment(employee.dateOfReceipt).format("DD/MM/YYYY")}</Td>
+                <Td borderColor="dark_sea_green" onClick={(event) => event.stopPropagation}>
+                  <Menu
+                    menuItems={[
+                      { name: "Изменить", icon: faPen, onClick: () => navigate(`/editEmployee/${employee.id}`) },
+                    ]}
+                  />
+                </Td>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
       </TableContainer>

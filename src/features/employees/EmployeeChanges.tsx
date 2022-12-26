@@ -11,8 +11,6 @@ import { EducationChangesModal } from "./EducationChangesModal"
 import { Toaster } from "react-hot-toast"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import { PopToast } from "../../components/toaster/Toaster"
-import { positions } from "../../mocks/positions"
-import { departments } from "../../mocks/departments"
 import { EmployeeContext } from "../providers/context"
 import { Types } from "../providers/reducers"
 import axios from "axios"
@@ -54,6 +52,8 @@ export const EmployeeChanges = () => {
   const { isOpen: isEducationOpen, onOpen: onEducationOpen, onClose: onEducationClose } = useDisclosure()
   const [employee, setEmployee] = useState<Employee>(initEmployee)
   const { dispatch } = useContext(EmployeeContext)
+  const [departments, setDepartments] = useState<{ id: string; name: string }[]>([])
+  const [positions, setPositions] = useState<{ id: string; name: string }[]>([])
 
   useEffect(() => {
     if (params.id) {
@@ -66,8 +66,7 @@ export const EmployeeChanges = () => {
           } }
       )
         .then((response) => {
-          const data = response.data
-          setEmployee(data)
+          setEmployee(response.data)
           setIsEdit(true)
         })
         .catch((error) => console.log(error))
@@ -76,12 +75,12 @@ export const EmployeeChanges = () => {
 
   const sendToPrint = () => {
     const object = getValues()
-    // const position = positions.find((item) => item.id === object.position) as { id: string; name: string }
-    // const department = departments.find((item) => item.id === object.department) as { id: string; name: string }
+    const position = positions.find((item) => +item.id === +object.position) as { id: string; name: string }
+    const department = departments.find((item) => +item.id === +object.department) as { id: string; name: string }
     const newEmployee = {
       employee: object.surname,
-      // position: position.name,
-      // department: department.name,
+      position: position.name,
+      department: department.name,
       date: data,
     }
     // @ts-ignore
@@ -112,6 +111,7 @@ export const EmployeeChanges = () => {
     register,
     setValue,
     getValues,
+    watch,
   } = useForm<EmployeeType>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -135,8 +135,46 @@ export const EmployeeChanges = () => {
     },
   })
 
+  const watchDepartment = watch("department")
   const isInvalid = !isDirty || !isValid
   const formFieldProps = { errors, register }
+
+  useEffect(() => {
+    if (watchDepartment) {
+      axios(
+        `http://localhost:8080/positions/by_department${watchDepartment}`,
+        { headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json"
+        } }
+      )
+        .then((res) => {
+          const positions = res.data._embedded.positionsList
+          // @ts-ignore
+          const arr = positions.map((item) => ({ id: item.id, name: item.positionName }))
+          setPositions(arr)
+        })
+        .catch((err) => console.log(err))
+    }
+  }, [watchDepartment])
+
+  useEffect(() => {
+    axios("http://localhost:8080/departments", {
+      headers: {
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      }
+    })
+      .then((res) => {
+        const departments = res.data._embedded.departmentList
+        // @ts-ignore
+        const arr = departments.map((item) => ({ id: item.id, name: item.nameDepartment }))
+        setDepartments(arr)
+      })
+      .catch((err) => console.log(err))
+  }, [])
 
   const addEmployee = () => {
     const object = getValues()
@@ -156,11 +194,12 @@ export const EmployeeChanges = () => {
         passportNumber: object.passportNumber,
         placeReceipt: object.placeReceipt,
       },
-      department: object.department,
-      position: object.position,
+      // department: object.department,
+      // position: object.position,
       dateOfReceipt: data,
     }
     console.log(sendObject)
+    sendToPrint()
     axios.post("http://localhost:8080/employees/create", sendObject, { headers: {
         "Accept": "application/json, application/*+json",
         "Access-Control-Allow-Credentials": true,
@@ -172,7 +211,10 @@ export const EmployeeChanges = () => {
       PopToast("Сообщение", "Сотрудник добавлен", "success")
       sendToPrint()
       onEducationOpen()
-    }).catch((err) => console.log(err))
+    }).catch((err) => {
+      console.log(err)
+      PopToast(err.message, err.response.data.error, "error")
+    })
     // TODO: добвление сотрудника
     // TODO: создание приказа (id = 1)
   }
@@ -358,7 +400,7 @@ export const EmployeeChanges = () => {
             tootlipLabel=""
             {...formFieldProps}
           >
-            <Select disabled={isEdit} background="ash_grey" borderColor="#353535">
+            <Select defaultValue="" disabled={isEdit} background="ash_grey" borderColor="#353535">
             <option value="" disabled>Выберите отдел</option>
               {departments.map((item) => (
                 <option key={item.id} value={item.id}>{item.name}</option>
@@ -390,8 +432,8 @@ export const EmployeeChanges = () => {
         {isEdit ? <Button onClick={editEmployee}>Изменить</Button> : (
           <Popover placement="left-start">
             <PopoverTrigger>
-              {/*<Button disabled={isInvalid}>*/}
-              <Button>Далее</Button>
+              <Button disabled={isInvalid}>Далее</Button>
+              {/* <Button>Далее</Button> */}
             </PopoverTrigger>
             <PopoverContent>
               <PopoverArrow />

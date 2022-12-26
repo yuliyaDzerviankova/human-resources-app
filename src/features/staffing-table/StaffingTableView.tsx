@@ -60,16 +60,14 @@ export const StaffingTableView = () => {
           discharge: item.discharge,
           salary: item.salary,
         }))
-        // console.log(staffingTables)
         setStaffings(staffingTables)
-        // setPositions(positions)
       })
       .catch((error) => console.log(error))
   }, [])
 
   return (
     <>
-      <Box p={4} />
+      <Box p={2} />
 
       <Flex justify="space-between" align="flex-start">
         <Flex direction="column" width="55%">
@@ -138,7 +136,6 @@ export const StaffingTableView = () => {
                       <Td borderColor="dark_sea_green" fontSize="16px">{staffing.salary}</Td>
                       {/*<Td borderColor="dark_sea_green">*/}
                       {/*  <Menu*/}
-                      {/*    menuButtonIcon={faEllipsisVertical}*/}
                       {/*    menuItems={[*/}
                       {/*      { name: "Изменить", icon: faPen, onClick: () => {} },*/}
                       {/*      { name: "Удалить", icon: faTrash, onClick: () => {} },*/}
@@ -153,7 +150,7 @@ export const StaffingTableView = () => {
           </TableContainer>
         </Flex>
 
-        <Stack spacing="5rem" width="35%">
+        <Stack spacing="3rem" width="35%">
           <Flex direction="column">
             <Flex align="center" justify="space-between">
               <Text fontWeight="bold" fontSize="18px" textTransform="uppercase" color="#4A5568">Должности</Text>
@@ -161,8 +158,8 @@ export const StaffingTableView = () => {
             </Flex>
 
             <TableContainer
-              mt={10}
-              maxHeight="25vh"
+              mt={7}
+              maxHeight="28vh"
               overflowY="auto"
               sx={{
                 "&::-webkit-scrollbar": {
@@ -191,7 +188,6 @@ export const StaffingTableView = () => {
                       <Td borderColor="dark_sea_green">{position.name}</Td>
                       {/*<Td borderColor="dark_sea_green" textAlign="right">*/}
                       {/*  <Menu*/}
-                      {/*    menuButtonIcon={faEllipsisVertical}*/}
                       {/*    menuItems={[*/}
                       {/*      { name: "Изменить", icon: faPen, onClick: () => {} },*/}
                       {/*      { name: "Удалить", icon: faTrash, onClick: () => {} },*/}
@@ -212,8 +208,8 @@ export const StaffingTableView = () => {
             </Flex>
 
             <TableContainer
-              mt={10}
-              maxHeight="25vh"
+              mt={7}
+              maxHeight="28vh"
               overflowY="auto"
               sx={{
                 "&::-webkit-scrollbar": {
@@ -242,7 +238,6 @@ export const StaffingTableView = () => {
                       <Td borderColor="dark_sea_green">{department.name}</Td>
                       {/*<Td borderColor="dark_sea_green" textAlign="right">*/}
                       {/*  <Menu*/}
-                      {/*    menuButtonIcon={faEllipsisVertical}*/}
                       {/*    menuItems={[*/}
                       {/*      { name: "Изменить", icon: faPen, onClick: () => {} },*/}
                       {/*      { name: "Удалить", icon: faTrash, onClick: () => {} },*/}
@@ -257,7 +252,6 @@ export const StaffingTableView = () => {
           </Flex>
           
         </Stack>
-
       </Flex>
     </>
   )

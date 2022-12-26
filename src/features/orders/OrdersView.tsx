@@ -1,14 +1,14 @@
-import {Box, Flex, Stack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure} from "@chakra-ui/react"
-import {faAdd, faEllipsisVertical} from "@fortawesome/free-solid-svg-icons"
-import {useNavigate} from "react-router-dom"
-import {Menu, RemoveModal} from "../../components"
-import {initEmployee} from "../../mocks/initialModels/initEmployee"
-import {ChangePositionModal} from "./change-position-modal"
-import {NewStaffTableModal} from "./new-staff-table-modal"
-import {useEffect, useState} from "react"
+import { Box, Flex, Stack, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react"
+import { faAdd } from "@fortawesome/free-solid-svg-icons"
+import { useNavigate } from "react-router-dom"
+import { Menu, RemoveModal } from "../../components"
+import { initEmployee } from "../../mocks/initialModels/initEmployee"
+import { ChangePositionModal } from "./change-position-modal"
+import { NewStaffTableModal } from "./new-staff-table-modal"
+import { useEffect, useState } from "react"
 import axios from "axios"
-import moment from "moment";
-import {formatDate} from "../../constants"
+import moment from "moment"
+import { formatDate } from "../../constants"
 
 export const OrdersView = () => {
   const navigate = useNavigate()
@@ -28,23 +28,20 @@ export const OrdersView = () => {
     )
     .then((response) => {
       const data = response.data._embedded.documentList
-      // @ts-ignore
-      let ordersArray = []
+      let ordersArray: { id: string; type: string; dateOrder: string; info: string }[] = []
       // @ts-ignore
       const ordersData = data.map((item) => {
         // @ts-ignore
-        return item.orders.map((subItem) => {
-          return {
+        return item.orders.map((subItem) => ({
             id: `${item.id}-${subItem.id}`,
             type: item.documentName,
             dateOrder: subItem.dateOrder,
             info: subItem.info
           }
-        })
+        ))
       })
       // @ts-ignore
       ordersData.map((item) => item.map((itemId) => ordersArray.push(itemId)))
-      // @ts-ignore
       setOrders(ordersArray)
     })
     .catch((error) => console.log(error))
@@ -57,7 +54,7 @@ export const OrdersView = () => {
       <Flex align="flex-start" justify="space-between" flex={1}>
         <TableContainer
           mr={6}
-          width="50&"
+          width="50%"
           display="flex"
           justifyContent="center"
           fontSize="20px"
@@ -99,21 +96,19 @@ export const OrdersView = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {orders.map((order) => {
-                return (
-                  <Tr
-                    key={order.id}
-                    _hover={{
-                      bg: "hookers_green",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <Td borderColor="dark_sea_green" fontSize="16px" whiteSpace="break-spaces">{order.type}</Td>
-                    <Td borderColor="dark_sea_green" fontSize="16px">{moment(order.dateOrder).format(formatDate)}</Td>
-                    <Td borderColor="dark_sea_green" fontSize="16px" whiteSpace="break-spaces">{order.info}</Td>
-                  </Tr>
-                )
-              })}
+              {orders.map((order) => (
+                <Tr
+                  key={order.id}
+                  _hover={{
+                    bg: "hookers_green",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Td borderColor="dark_sea_green" fontSize="16px" whiteSpace="break-spaces">{order.type}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px">{moment(order.dateOrder).format(formatDate)}</Td>
+                  <Td borderColor="dark_sea_green" fontSize="16px" whiteSpace="break-spaces">{order.info}</Td>
+                </Tr>
+              ))}
             </Tbody>
           </Table>
         </TableContainer>
@@ -123,7 +118,6 @@ export const OrdersView = () => {
             <Flex align="center" justify="space-between">
               <Text fontWeight="bold" fontSize="18px" textTransform="uppercase" color="#4A5568">Виды приказов</Text>
             </Flex>
-
               <TableContainer
                 mt={10}
                 sx={{
@@ -149,10 +143,9 @@ export const OrdersView = () => {
                 <Table>
                   <Tbody>
                     <Tr>
-                      <Td borderColor="dark_sea_green">Приказ о принятии на работу нового сотрудника</Td>
+                      <Td borderColor="dark_sea_green" whiteSpace="break-spaces">Приказ о принятии на работу нового сотрудника</Td>
                       <Td borderColor="dark_sea_green">
                         <Menu
-                          menuButtonIcon={faEllipsisVertical}
                           menuItems={[
                             { name: "Создать приказ", icon: faAdd, onClick: () => navigate("/addEmployee") },
                           ]}
@@ -160,10 +153,9 @@ export const OrdersView = () => {
                       </Td>
                     </Tr>
                     <Tr>
-                      <Td borderColor="dark_sea_green">Приказ об увольнении сотрудника</Td>
+                      <Td borderColor="dark_sea_green" whiteSpace="break-spaces">Приказ об увольнении сотрудника</Td>
                       <Td borderColor="dark_sea_green">
                         <Menu
-                          menuButtonIcon={faEllipsisVertical}
                           menuItems={[
                             { name: "Создать приказ", icon: faAdd, onClick: () => onFiredOpen() },
                           ]}
@@ -171,10 +163,9 @@ export const OrdersView = () => {
                       </Td>
                     </Tr>
                     <Tr>
-                      <Td borderColor="dark_sea_green">Приказ о смене должности</Td>
+                      <Td borderColor="dark_sea_green" whiteSpace="break-spaces">Приказ о смене должности</Td>
                       <Td borderColor="dark_sea_green">
                         <Menu
-                          menuButtonIcon={faEllipsisVertical}
                           menuItems={[
                             { name: "Создать приказ", icon: faAdd, onClick: () => onChangePositionOpen() },
                           ]}
@@ -182,10 +173,9 @@ export const OrdersView = () => {
                       </Td>
                     </Tr>
                     <Tr>
-                      <Td borderColor="dark_sea_green">Приказ о добавлении штатной единицы</Td>
+                      <Td borderColor="dark_sea_green" whiteSpace="break-spaces">Приказ о добавлении штатной единицы</Td>
                       <Td borderColor="dark_sea_green">
                         <Menu
-                          menuButtonIcon={faEllipsisVertical}
                           menuItems={[
                             { name: "Создать приказ", icon: faAdd, onClick: () => onNewStaffTableOpen() },
                           ]}
