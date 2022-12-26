@@ -1,19 +1,24 @@
-import React from "react"
+import React, { useContext, useState } from "react"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Alert, AlertDescription, Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Tooltip } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
+import axios from "axios"
+import { EmployeeContext } from "../providers/context"
+import { Types } from "../providers/reducers"
 
 type User = {
-  username: string
+  login: string
   password: string
 }
 
 export const Login = () => {
   const navigate = useNavigate()
+  const [isError, setIsError] = useState(false)
+  const { dispatch } = useContext(EmployeeContext)
   const loginSchema = z.object({
-    username: z.string().nonempty({ message: "Пожалуйста введите логин" }),
+    login: z.string().nonempty({ message: "Пожалуйста введите логин" }),
     password: z.string().nonempty({ message: "Пожалуйста введите пароль" }),
   })
 
@@ -22,9 +27,23 @@ export const Login = () => {
   })
 
   const auth = (data: User) => {
-    console.log(data)
-    navigate("/home")
-    // TODO: авторизация пользователя
+    axios.post("http://localhost:8080/users/login", data)
+    .then((res) => {
+      if (res.status === 200) {
+        const userData = {
+          id: res.data.id,
+          login: res.data.login,
+          accessId: res.data.access
+        }
+        // @ts-ignore
+        dispatch({ type: Types.SetUser, payload: { ...userData } })
+        navigate("/home")
+      }
+    })
+    .catch(() => {
+      setIsError(true)
+      setTimeout(() => setIsError(false), 3000)
+    })
   }
 
   return (
@@ -43,16 +62,18 @@ export const Login = () => {
         px={10}
         width="25rem"
       >
-        {/*<Alert variant="error" mb={4}>*/}
-        {/*  <AlertDescription>Логин и/или пароль не совпадают</AlertDescription>*/}
-        {/*</Alert>*/}
+        {isError && (
+          <Alert variant="error" mb={4}>
+            <AlertDescription>Логин и/или пароль не совпадают</AlertDescription>
+          </Alert>
+        )}
 
         <Stack spacing={5} direction="column" as="form" width="90%" onSubmit={handleSubmit(auth)} flex={1}>
           <FormControl>
             <Flex direction="column">
               <FormLabel>Логин</FormLabel>
-              <Tooltip label={errors.username?.message} placement="left" hasArrow>
-                <Input {...register("username")} placeholder="Введите логин" />
+              <Tooltip label={errors.login?.message} placement="left" hasArrow>
+                <Input {...register("login")} placeholder="Введите логин" />
               </Tooltip>
             </Flex>
           </FormControl>

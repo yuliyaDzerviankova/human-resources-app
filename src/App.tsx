@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { useLocation, useNavigate, useRoutes } from "react-router-dom"
 import { Flex, useColorMode, Text, Link, Stack } from '@chakra-ui/react'
 import { Login } from "./features/auth/login"
@@ -13,11 +13,50 @@ import { PrintNewEmployee } from "./features/orders/printNewEmployee"
 import { PrintChangePosition } from "./features/orders/printChangePosition"
 import { PrintFiredEmployee } from "./features/orders/printFiredEmployee"
 import { PrintNewStaffTable } from "./features/orders/printNewStaffTable"
+import axios from "axios"
+import { EmployeeContext } from "./features/providers/context"
+import { Types } from "./features/providers/reducers"
 
 const App = () => {
   const { setColorMode } = useColorMode()
   const navigate = useNavigate()
   const location = useLocation()
+  const { state: { globalState: { user } }, dispatch } = useContext(EmployeeContext)
+
+  const [login, setLogin] = useState("")
+  const [id, setId] = useState("")
+
+  useEffect(() => {
+    if (user.id) {
+      setLogin(user.login)
+    } else {
+      axios("http://localhost:8080/users/last")
+      .then((res) => {
+        setLogin(res.data.login)
+        setId(res.data.id)
+      })
+      .catch((err) => console.log(err))
+    }
+  }, [])
+  
+
+  useEffect(() => {
+    if (id) {
+      axios(`http://localhost:8080/users/${id}`)
+      .then((res) => {
+        const resData = res.data
+        const obj = {
+          id: id,
+          accessId: resData.id, 
+          login: resData.login
+        }
+
+        // @ts-ignore
+        dispatch({ type: Types.SetUser, payload: { obj } })
+      })
+      .catch((err) => console.log(err))
+    }
+  }, [id]) 
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setColorMode("light"), [])
@@ -51,7 +90,7 @@ const App = () => {
               fontSize="14px"
               pr={5}
             >
-              Admin
+              {login}
             </Text>
             <Link
               _hover={{

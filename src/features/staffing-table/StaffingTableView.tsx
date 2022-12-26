@@ -41,26 +41,22 @@ export const StaffingTableView = () => {
         // @ts-ignore
         const positions = data.map((item) => ({ id: item.id, name: item.positionName }))
         setPositions(positions)
-      })
-      .catch((error) => console.log(error))
-    axios(
-      "http://localhost:8080/staffingTable",
-      { headers: {
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        } }
-    )
-      .then((response) => {
-        const data = response.data._embedded.staffingTableList
+
+        let staffingsArray: { id: string; position: string; discharge: string; salary: string }[] = []
         // @ts-ignore
-        const staffingTables = data.map((item) => ({
-          id: item.id,
-          position: "",
-          discharge: item.discharge,
-          salary: item.salary,
-        }))
-        setStaffings(staffingTables)
+        const staffingsData = data.map((item) => {
+          // @ts-ignore
+          return item.staffingTables.map((subItem) => ({
+              id: `${item.id}-${subItem.id}`,
+              position: item.positionName,
+              discharge: subItem.discharge,
+              salary: subItem.salary
+            }
+          ))
+        })
+        // @ts-ignore
+        staffingsData.map((item) => item.map((itemId) => staffingsArray.push(itemId)))
+        setStaffings(staffingsArray)
       })
       .catch((error) => console.log(error))
   }, [])

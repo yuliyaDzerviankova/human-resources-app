@@ -1,19 +1,22 @@
-import React from "react"
+import React, { useState } from "react"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Alert, AlertDescription, Button, Flex, FormControl, FormLabel, Heading, Input, Link, Stack, Tooltip } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
+import axios from "axios"
 
 type User = {
-  username: string
+  login: string
   password: string
 }
 
 export const Register = () => {
   const navigate = useNavigate()
+  const [isError, setIsError] = useState(false)
+  const [message, setMessage] = useState("")
   const loginSchema = z.object({
-    username: z.string().nonempty({ message: "Пожалуйста введите логин" }),
+    login: z.string().nonempty({ message: "Пожалуйста введите логин" }),
     password: z.string().nonempty({ message: "Пожалуйста введите пароль" }),
   })
 
@@ -22,14 +25,27 @@ export const Register = () => {
   })
 
   const auth = (data: User) => {
-    console.log(data)
     const user = {
-      username: data.username,
+      login: data.login,
       password: data.password,
-      access: 3,
+      access: {
+        id: 3,
+        accessName: "Local"
+      },
     }
-    // TODO: добавление пользователя
-    navigate("/home")
+    axios.post("http://localhost:8080/users/create", user)
+    .then((res) => {
+      if (res.status === 201) {
+        setIsError(false)
+        setMessage("Пользователь зарегистрирован")
+        setTimeout(() => navigate("/"), 5000)
+      }
+    })
+    .catch(() => {
+      setIsError(true)
+      setMessage("Пользователь с таким именем уже существует")
+      setTimeout(() => setMessage(""), 3000)
+    })
   }
 
   return (
@@ -48,16 +64,18 @@ export const Register = () => {
         px={10}
         width="25rem"
       >
-        {/*<Alert variant="error" mb={4}>*/}
-        {/*  <AlertDescription>Пользователь с таким именем уже существует</AlertDescription>*/}
-        {/*</Alert>*/}
+        {message && (
+          <Alert variant={isError ? "error" : "info"} mb={4}>
+            <AlertDescription>{message}</AlertDescription>
+          </Alert>
+        )}
 
         <Stack spacing={5} direction="column" as="form" width="90%" onSubmit={handleSubmit(auth)} flex={1}>
           <FormControl>
             <Flex direction="column">
               <FormLabel>Логин</FormLabel>
-              <Tooltip label={errors.username?.message} placement="left" hasArrow>
-                <Input placeholder="Введите логин" {...register("username")} />
+              <Tooltip label={errors.login?.message} placement="left" hasArrow>
+                <Input placeholder="Введите логин" {...register("login")} />
               </Tooltip>
             </Flex>
           </FormControl>
