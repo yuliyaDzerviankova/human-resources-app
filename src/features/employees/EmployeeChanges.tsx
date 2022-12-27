@@ -72,9 +72,9 @@ export const EmployeeChanges = () => {
     patronymic: z.string(),
     bDay: z.string().refine((val) => moment().diff(val, "years") >= 18 && moment().diff(val, "years") < 63, { message: "Возраст может быть от 18 до 63 лет" }),
     birthPlace: z.string(),
-    mobPhone: z.string(),
-    homePhone: z.string(),
-    passportNumber: z.string(),
+    mobPhone: z.string().regex(new RegExp(/[+][375][0-9]{11}/), { message: "Введите номер телефона в формате +375********" }),
+    homePhone: z.string().regex(new RegExp(/[+][375][0-9]{11}/), { message: "Введите номер телефона в формате +375********" }),
+    passportNumber: z.string().regex(new RegExp(/[A-Z]{2}[0-9]{7}/), { message: "Введите данные паспорта в формате HB2597845" }),
     dateReceipt: z.string(),
     placeReceipt: z.string(),
     passportAddress: z.string(),
@@ -118,8 +118,6 @@ export const EmployeeChanges = () => {
   const watchMobPhone = watch("mobPhone")
   const isInvalid = !isDirty || !isValid
   const formFieldProps = { errors, register }
-
-  console.log(watchMobPhone)
 
   useEffect(() => {
     if (watchDepartment) {
@@ -199,9 +197,10 @@ export const EmployeeChanges = () => {
       }
     }
   }
-
+  
   useEffect(() => {
     if (params.id && employee) {
+      const department = departments.find((item) => item.name === watchDepartment)
       setIsEdit(true)
       setValue("firstName", employee.firstName)
       setValue("surname", employee.surname)
@@ -216,8 +215,8 @@ export const EmployeeChanges = () => {
       setValue("passportAddress", employee.passport.passportAddress)
       setValue("actualAddress", employee.passport.actualAddress)
       setValue("nationality", employee.passport.nationality)
-      setValue("department", employee.staffingTable.department.nameDepartment)
-      setValue("position", employee.staffingTable.positions.positionName)
+      setValue("department", employee.staffingTable.department.id)
+      setValue("position", employee.staffingTable.positions.id)
       setValue("offerDate", moment(employee.dateOfReceipt).format(formatDate))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -282,37 +281,19 @@ export const EmployeeChanges = () => {
           <FormField<EmployeeType>
             label="Мобильный номер"
             name="mobPhone"
-            tootlipLabel=""
+            tootlipLabel={errors.mobPhone?.message || ""}
             {...formFieldProps}
           >
-            <InputGroup>
-              <InputLeftAddon
-                children="+375"
-                background="white"
-                borderWidth={1}
-                borderColor="brown"
-                height="44px"
-              />
-              <Input type="tel" maxLength={9} />
-            </InputGroup>
+            <Input type="tel" maxLength={13} />
           </FormField>
 
           <FormField<EmployeeType>
             label="Домашний номер"
             name="homePhone"
-            tootlipLabel=""
+            tootlipLabel={errors.homePhone?.message || ""}
             {...formFieldProps}
           >
-            <InputGroup>
-              <InputLeftAddon
-                children="+375232"
-                background="white"
-                borderWidth={1}
-                borderColor="brown"
-                height="44px"
-              />
-              <Input type="tel" maxLength={6} />
-            </InputGroup>
+            <Input type="tel" maxLength={13} />
           </FormField>
         </Stack>
 
@@ -320,19 +301,10 @@ export const EmployeeChanges = () => {
         <FormField<EmployeeType>
             label="Паспорт"
             name="passportNumber"
-            tootlipLabel=""
+            tootlipLabel={errors.passportNumber?.message || ""}
             {...formFieldProps}
           >
-          <InputGroup>
-            <InputLeftAddon
-              children="HB"
-              background="white"
-              borderWidth={1}
-              borderColor="brown"
-              height="44px"
-            />
-            <Input maxLength={7} />
-          </InputGroup>
+            <Input maxLength={9} />
           </FormField>
 
           <FormField<EmployeeType>

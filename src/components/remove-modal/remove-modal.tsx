@@ -119,7 +119,7 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
           "http://localhost:8080/firedEmployees/create",
           {
             fio,
-            info: order.info,
+            info: getValues().reasonId,
           }
         ).then(() => {
           axios.post("http://localhost:8080/orders/create", order)

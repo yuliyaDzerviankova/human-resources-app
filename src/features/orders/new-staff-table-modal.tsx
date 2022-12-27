@@ -20,7 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Types } from "../providers/reducers"
 import axios from "axios"
 import moment from "moment";
-import { newStaffTableOrder } from "../../constants"
+import { formatDate, newStaffTableOrder } from "../../constants"
 
 type NewStaffTableModalProps = {
   isOpen: boolean
@@ -65,7 +65,7 @@ export const NewStaffTableModal: React.FC<NewStaffTableModalProps> = ({ isOpen, 
       rank: "",
       salary: "",
       departmentId: "",
-      staffDate: "",
+      staffDate: moment().format("MM/DD/YYYY"),
     }
   })
 
