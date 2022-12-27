@@ -5,6 +5,8 @@ import { Employee } from "../../models"
 import { useReactToPrint } from "react-to-print"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import axios from "axios"
+import { formatDate } from "../../constants"
+import moment from "moment"
 // import JsPDF from "jspdf"
 
 export const PrintEmployee = () => {
@@ -33,21 +35,11 @@ export const PrintEmployee = () => {
   // }
 
   useEffect(() => {
-    axios(
-      `http://localhost:8080/employees/${params.id}`,
-      { headers: {
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json"
-        } }
-    )
-      .then((response) => {
-        const data = response.data._embedded.employeeList
-        setEmployee(data)
-      })
+    axios(`http://localhost:8080/employees/${params.id}`)
+      .then((response) => setEmployee(response.data))
       .catch((error) => console.log(error))
   }, [params.id])
-  
+
   return (
     <Stack p={2}>
       <Flex align="center" justify="flex-end" width="100%" p={4}>
@@ -56,8 +48,7 @@ export const PrintEmployee = () => {
         <Button onClick={() => navigate(-1)}>Назад</Button>
       </Flex>
       <Stack ref={componentRef} px={4} py={6} id="report">
-        {/* <Heading fontSize={24}>Личная карточка сотрудника</Heading> */}
-        <Heading fontSize={24}>Personal card</Heading>
+        <Heading fontSize={24}>Личная карточка сотрудника</Heading>
         <Box width="100%" height="1px" background="black" />
         <Flex align="center" justify="space-between">
           <Stack>
@@ -92,7 +83,7 @@ export const PrintEmployee = () => {
 
             <Flex>
               <Text mr={4}>2. Дата рождения</Text>
-              <Text textDecoration="underline">{employee.bday}</Text>
+              <Text textDecoration="underline">{moment(employee.bday).format(formatDate)}</Text>
             </Flex>
             <Flex>
               <Text mr={4}>3. Место рождения</Text>
@@ -111,7 +102,7 @@ export const PrintEmployee = () => {
               </Flex>
             </Flex>
             <Flex direction="column">
-              <Text>{employee.education.finishDate}</Text>
+              <Text>{moment(employee.education.finishDate).format(formatDate)}</Text>
               <Box height="1px" background="black" width="90%" />
               <Text textAlign="center" mr={4}>учебного заведения</Text>
             </Flex>
@@ -201,14 +192,14 @@ export const PrintEmployee = () => {
             <Text mr={4}>9. Семейное положение ______________________</Text>
             <Text mr={4}>10. Состав семьи</Text>
             <Flex direction="column">
-              <Text>{employee.employeesFamily.surname} {employee.employeesFamily.firstName}</Text>
+              <Text>{employee.employeesFamily?.surname} {employee.employeesFamily?.firstName}</Text>
               <Box height="1px" background="black" />
               <Text textAlign="center">степень родства и дата рождения</Text>
               <Text textAlign="center">каждого члена семьи</Text>
             </Flex>
             <Flex direction="column">
               {/*<Text>{employee.employeesFamily.bDay} {employee.employeesFamily.relationDegree}</Text>*/}
-              <Text>{employee.employeesFamily.bday}</Text>
+              <Text>{employee?.employeesFamily?.bday ? moment(employee?.employeesFamily?.bday).format(formatDate) : ""}</Text>
               <Box height="1px" background="black" />
             </Flex>
             {/*{employee.family.map((item) => (*/}
@@ -237,7 +228,7 @@ export const PrintEmployee = () => {
             </Flex>
             <Flex>
               <Text mr={4}>дата выдачи</Text>
-              <Text textDecoration="underline">{employee.passport.dateReceipt}</Text>
+              <Text textDecoration="underline">{moment(employee.passport.dateReceipt).format(formatDate)}</Text>
             </Flex>
             <Flex direction="column">
               <Text>12. Адрес регистрации по месту жительства</Text>

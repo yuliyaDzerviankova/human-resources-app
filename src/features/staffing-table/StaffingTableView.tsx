@@ -37,32 +37,14 @@ export const StaffingTableView = () => {
         // @ts-ignore
         const positions = data.map((item) => ({ id: item.id, name: item.positionName }))
         setPositions(positions)
-
-        let staffingsArray: { id: string; position: string; discharge: string; salary: string }[] = []
-        // @ts-ignore
-        const staffingsData = data.map((item) => {
-          // @ts-ignore
-          return item.staffingTables.map((subItem) => ({
-              id: `${item.id}-${subItem.id}`,
-              position: item.positionName,
-              discharge: subItem.discharge,
-              salary: subItem.salary
-            }
-          ))
-        })
-        // @ts-ignore
-        staffingsData.map((item) => item.map((itemId) => staffingsArray.push(itemId)))
-        // setStaffings(staffingsArray)
       })
       .catch((error) => console.log(error))
-  }, [])
-
-  useEffect(() => {
-    axios("http://localhost:8080/staffingTable")
+      axios("http://localhost:8080/staffingTable")
       .then((res) => {
         const resData = res.data
         setStaffings(resData)
-      })
+      }
+    )
   }, [])
 
   return (

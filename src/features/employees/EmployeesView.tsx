@@ -94,7 +94,6 @@ export const EmployeesView = () => {
     )
     .then((response) => {
       const resData = response.data._embedded.employeeList
-      console.log(resData)
       setEmployees(resData)
       setEmployeesArray(resData)
     })

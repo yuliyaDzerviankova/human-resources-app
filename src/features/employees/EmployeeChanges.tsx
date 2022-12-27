@@ -115,8 +115,11 @@ export const EmployeeChanges = () => {
   })
 
   const watchDepartment = watch("department")
+  const watchMobPhone = watch("mobPhone")
   const isInvalid = !isDirty || !isValid
   const formFieldProps = { errors, register }
+
+  console.log(watchMobPhone)
 
   useEffect(() => {
     if (watchDepartment) {
@@ -322,7 +325,7 @@ export const EmployeeChanges = () => {
           >
           <InputGroup>
             <InputLeftAddon
-              children="  HB"
+              children="HB"
               background="white"
               borderWidth={1}
               borderColor="brown"
