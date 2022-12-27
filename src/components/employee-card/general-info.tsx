@@ -41,7 +41,7 @@ export const GeneralInfo: React.FC<GeneralInfoProps> = ({ employee, onOpen }) =>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Место рождения:</Text>
-            <Text>{employee.passport.birthPlace}</Text>
+            <Text>{employee.passport?.birthPlace}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
@@ -58,32 +58,32 @@ export const GeneralInfo: React.FC<GeneralInfoProps> = ({ employee, onOpen }) =>
         <Stack spacing={6} width="50%">
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Паспорт:</Text>
-            <Text>{employee.passport.passportNumber}</Text>
+            <Text>{employee.passport?.passportNumber}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Кем выдан:</Text>
-            <Text>{employee.passport.placeReceipt}</Text>
+            <Text>{employee.passport?.placeReceipt}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Когда выдан:</Text>
-            <Text>{moment(employee.passport.dateReceipt).format(formatDate)}</Text>
+            <Text>{employee.passport?.dateReceipt ? moment(employee.passport?.dateReceipt).format(formatDate) : ""}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Адрес прописки:</Text>
-            <Text>{employee.passport.passportAddress}</Text>
+            <Text>{employee.passport?.passportAddress}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Адрес проживания:</Text>
-            <Text textAlign="right">{employee.passport.actualAddress}</Text>
+            <Text textAlign="right">{employee.passport?.actualAddress}</Text>
           </Flex>
 
           <Flex flex={1} justify="space-between">
             <Text fontWeight="bold">Гражданство:</Text>
-            <Text>{employee.passport.nationality}</Text>
+            <Text>{employee.passport?.nationality}</Text>
           </Flex>
         </Stack>
       </Stack>

@@ -58,11 +58,11 @@ export const Education: React.FC<EducationProps> = ({ employee }) => {
           </Thead>
           <Tbody>
             <Tr>
-              <Td borderColor="dark_sea_green">{education.educationKind}</Td>
-              <Td borderColor="dark_sea_green" width="100px" whiteSpace="break-spaces">{education.institutionName}</Td>
-              <Td borderColor="dark_sea_green">{education.documentName}</Td>
-              <Td borderColor="dark_sea_green">{moment(education.finishDate).format(formatDate)}</Td>
-              <Td borderColor="dark_sea_green">{education.speciality}</Td>
+              <Td borderColor="dark_sea_green">{education?.educationKind}</Td>
+              <Td borderColor="dark_sea_green" width="100px" whiteSpace="break-spaces">{education?.institutionName}</Td>
+              <Td borderColor="dark_sea_green">{education?.documentName}</Td>
+              <Td borderColor="dark_sea_green">{education?.finishDate ? moment(education?.finishDate).format(formatDate) : ""}</Td>
+              <Td borderColor="dark_sea_green">{education?.speciality}</Td>
             </Tr>
           </Tbody>
         </Table>

@@ -28,8 +28,8 @@ export const Family: React.FC<FamilyProps> = ({ employee }) => {
             <Tr>
               <Td borderColor="dark_sea_green">{employee?.employeesFamily?.surname}</Td>
               <Td borderColor="dark_sea_green">{employee?.employeesFamily?.firstName}</Td>
-              <Td borderColor="dark_sea_green">{moment(employee?.employeesFamily?.bday).format(formatDate)}</Td>
-              <Td borderColor="dark_sea_green">Супруга</Td>
+              <Td borderColor="dark_sea_green">{employee?.employeesFamily?.bday ? moment(employee?.employeesFamily?.bday).format(formatDate) : ""}</Td>
+              <Td borderColor="dark_sea_green"></Td>
             </Tr>
           </Tbody>
         </Table>

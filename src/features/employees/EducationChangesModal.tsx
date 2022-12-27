@@ -18,7 +18,9 @@ import { EducationKind } from "../../models"
 import axios from "axios"
 import * as z from "zod"
 import { useForm } from "react-hook-form"
+import moment from "moment"
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod"
+import { formatDateForInput } from "../../constants"
 
 type EducationChangesModalProps = {
   employeeId: number
@@ -89,6 +91,10 @@ export const EducationChangesModal: React.FC<EducationChangesModalProps> = ({
     }
     // TODO: добавление образование
   }
+
+  useEffect(() => {
+    setValue("finishDate", moment().format(formatDateForInput))
+  }, [])
 
   useEffect(() => {
     if (watchEducation === EducationKind.HIGH) {

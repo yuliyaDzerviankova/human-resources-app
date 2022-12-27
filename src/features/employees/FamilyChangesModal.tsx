@@ -12,12 +12,14 @@ import {
   Stack,
   Text
 } from "@chakra-ui/react"
-import React from "react"
+import React, { useEffect } from "react"
 import { FormField } from "../../components"
 import { Employee } from "../../models"
 import * as z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import moment from "moment"
+import { formatDateForInput } from "../../constants"
 
 type FamilyChangesModalProps = {
   isFamilyOpen: boolean
@@ -43,6 +45,7 @@ export const FamilyChangesModal: React.FC<FamilyChangesModalProps> = ({ isFamily
   const {
     formState: { errors },
     register,
+    setValue,
   } = useForm<Family>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -53,6 +56,10 @@ export const FamilyChangesModal: React.FC<FamilyChangesModalProps> = ({ isFamily
       bDay: "",
     }
   })
+
+  useEffect(() => {
+    setValue("bDay", moment().format(formatDateForInput))
+  }, [])
 
   const formFieldProps = { errors, register }
 

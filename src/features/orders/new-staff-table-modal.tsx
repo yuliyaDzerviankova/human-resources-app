@@ -38,7 +38,6 @@ type NewStaffTable = {
 export const NewStaffTableModal: React.FC<NewStaffTableModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate()
   const { dispatch } = useContext(EmployeeContext)
-  const format = "YYYY-MM-DD"
   const [departments, setDepartments] = useState<{ id: string; name: string }[]>([])
   const [positions, setPositions] = useState<{ id: string; name: string }[]>([])
   const [document, setDocument] = useState<{ id: string; documentName: string }>({

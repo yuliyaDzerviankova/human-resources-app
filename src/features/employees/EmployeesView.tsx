@@ -25,8 +25,6 @@ import { useNavigate } from "react-router-dom"
 import { Employee } from "../../models"
 import { faPen, faSearch, faFilter } from "@fortawesome/free-solid-svg-icons"
 import { EmployeeCardModal, Menu } from "../../components"
-import { departments } from "../../mocks/departments"
-import { positions } from "../../mocks/positions"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import axios from "axios"
 import moment from "moment"
@@ -42,6 +40,8 @@ export const EmployeesView = () => {
   const [search, setSearch] = useState("")
   const [employees, setEmployees] = useState<Employee[]>([])
   const [employeesArray, setEmployeesArray] = useState<Employee[]>([])
+  const [departments, setDepartments] = useState<{ id: string; name: string }[]>([])
+  const [positions, setPositions] = useState<{ id: string; name: string }[]>([])
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -60,18 +60,18 @@ export const EmployeesView = () => {
   const filterDepartment = (e: ChangeEvent<HTMLSelectElement>) => setDepartmentFilter(e.target.value)
   const filterPosition = (e: ChangeEvent<HTMLSelectElement>) => setPositionFilter(e.target.value)
 
-  const applyFilter = () => {
-    const filterArray = employees.filter((item) => item.staffingTable.department.nameDepartment === departmentFilter)
-    setEmployeesArray(filterArray)
-    setIsDepartmentFilter(false)
-  }
+  // const applyFilter = () => {
+  //   const filterArray = employees.filter((item) => item.staffingTable.department.nameDepartment === departmentFilter)
+  //   setEmployeesArray(filterArray)
+  //   setIsDepartmentFilter(false)
+  // }
 
-  const applyPositionFilter = () => {
-    const filterArray = employees.filter((item) => item.staffingTable.positions.positionName === positionFilter)
+  // const applyPositionFilter = () => {
+  //   const filterArray = employees.filter((item) => item.staffingTable.positions.positionName === positionFilter)
 
-    setEmployeesArray(filterArray)
-    setIsPositionFilter(false)
-  }
+  //   setEmployeesArray(filterArray)
+  //   setIsPositionFilter(false)
+  // }
 
   const reset = () => {
     setEmployeesArray(employees)
@@ -82,22 +82,49 @@ export const EmployeesView = () => {
     setEmployeesArray(employees)
     setIsPositionFilter(false)
   }
+
+  useEffect(() => {
+    if (departmentFilter){
+      axios(`http://localhost:8080/employees/filter/department/${departmentFilter}`)
+      .then((res) => {
+        setEmployeesArray(res.data)
+      })
+    }
+  }, [departmentFilter])
+
+  useEffect(() => {
+    if (positionFilter){
+      axios(`http://localhost:8080/employees/filter/position/${positionFilter}`)
+      .then((res) => {
+        setEmployeesArray(res.data)
+      })
+    }
+  }, [positionFilter])
   
   useEffect(() => {
-    axios(
-      "http://localhost:8080/employees",
-      { headers: {
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      } }
-    )
+    axios("http://localhost:8080/employees")
     .then((response) => {
       const resData = response.data._embedded.employeeList
       setEmployees(resData)
       setEmployeesArray(resData)
     })
     .catch((error) => console.log(error))
+    axios("http://localhost:8080/departments")
+    .then((res) => {
+      const departments = res.data._embedded.departmentList
+      // @ts-ignore
+      const arr = departments.map((item) => ({ id: item.id, name: item.nameDepartment }))
+      setDepartments(arr)
+    })
+    .catch((err) => console.log(err))
+    axios("http://localhost:8080/positions")
+    .then((res) => {
+      const positions = res.data._embedded.positionsList
+      // @ts-ignore
+      const arr = positions.map((item) => ({ id: item.id, name: item.positionName }))
+      setPositions(arr)
+    })
+    .catch((err) => console.log(err))
   }, [])
 
   return (
@@ -170,7 +197,10 @@ export const EmployeesView = () => {
                   <Box _hover={{ cursor: "pointer" }}>
                     <FontAwesomeIcon
                       icon={faFilter}
-                      onClick={() => setIsDepartmentFilter(!isDepartmentFilter)}
+                      onClick={() => {
+                        setIsDepartmentFilter(!isDepartmentFilter)
+                        setIsPositionFilter(false)
+                      }}
                     />
                   </Box>
                   {isDepartmentFilter && (
@@ -188,7 +218,7 @@ export const EmployeesView = () => {
                     >
                       <FormControl mb={6}>
                         <FormLabel>Отдел</FormLabel>
-                        <Select background="ash_gray" onChange={(e: ChangeEvent<HTMLSelectElement>) => filterDepartment(e)}>
+                        <Select background="ash_gray" defaultValue="" onChange={(e: ChangeEvent<HTMLSelectElement>) => filterDepartment(e)}>
                           <option value="" disabled>Выберите отдел</option>
                           {departments.map((item) => (
                             <option key={item.id} value={item.id}>{item.name}</option>
@@ -197,9 +227,9 @@ export const EmployeesView = () => {
                       </FormControl>
                       <Flex width="100%" display="flex" align="center" justify="space-between">
                         <Button onClick={reset}>Сбросить</Button>
-                        <Button onClick={applyFilter}>
+                        {/* <Button onClick={applyFilter}>
                           Применить
-                        </Button>
+                        </Button> */}
                       </Flex>
                     </Box>
                   )}
@@ -211,7 +241,10 @@ export const EmployeesView = () => {
                   <Box _hover={{ cursor: "pointer" }}>
                     <FontAwesomeIcon
                       icon={faFilter}
-                      onClick={() => setIsPositionFilter(!isPositionFilter)}
+                      onClick={() => {
+                        setIsPositionFilter(!isPositionFilter)
+                        setIsDepartmentFilter(false)
+                      }}
                     />
                   </Box>
                   {isPositionFilter && (
@@ -229,18 +262,18 @@ export const EmployeesView = () => {
                     >
                       <FormControl mb={6}>
                         <FormLabel>Должность</FormLabel>
-                        <Select background="ash_gray" defaultValue={0} onChange={(e: ChangeEvent<HTMLSelectElement>) => filterPosition(e)}>
-                          <option value={0} disabled>Выберите должность</option>
+                        <Select background="ash_gray" defaultValue="" onChange={(e: ChangeEvent<HTMLSelectElement>) => filterPosition(e)}>
+                          <option value="" disabled>Выберите должность</option>
                           {positions.map((item) => (
-                            <option key={item.id}>{item.name}</option>
+                            <option key={item.id} value={item.id}>{item.name}</option>
                           ))}
                         </Select>
                       </FormControl>
                       <Flex width="100%" display="flex" align="center" justify="space-between">
                         <Button onClick={resetPosition}>Сбросить</Button>
-                        <Button onClick={applyPositionFilter}>
+                        {/* <Button onClick={applyPositionFilter}>
                           Применить
-                        </Button>
+                        </Button> */}
                       </Flex>
                     </Box>
                   )}
