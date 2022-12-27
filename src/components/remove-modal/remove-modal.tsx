@@ -28,7 +28,7 @@ import * as z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Types } from "../../features/providers/reducers"
-import { firedEmployeeOrder } from "../../constants"
+import { firedEmployeeOrder, formatDateForInput } from "../../constants"
 import axios from "axios"
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import moment from "moment";
@@ -70,6 +70,7 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
     register,
     getValues,
     watch,
+    setValue,
   } = useForm<FiredEmployee>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -79,6 +80,10 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
       reasonId: "",
     }
   })
+
+  useEffect(() => {
+    setValue("fireDate", moment().format(formatDateForInput))
+  }, [])
 
   const watchEmployee = watch("employeeId")
   const formFieldProps = { errors, register }
@@ -177,8 +182,8 @@ export const RemoveModal: React.FC<RemoveModalProps> = ({
               tootlipLabel=""
               {...formFieldProps}
             >
-              <Select defaultValue="0" background="ash_grey" borderColor="#353535">
-                <option value="0" disabled>Выберите причину</option>
+              <Select background="ash_grey" borderColor="#353535">
+                <option value="" disabled>Выберите причину</option>
                 {fireReasons.map((item) => (
                   <option key={item.id}>{item.reason}</option>
                 ))}

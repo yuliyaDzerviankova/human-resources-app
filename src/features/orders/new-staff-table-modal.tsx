@@ -20,7 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Types } from "../providers/reducers"
 import axios from "axios"
 import moment from "moment";
-import { formatDate, newStaffTableOrder } from "../../constants"
+import { formatDate, formatDateForInput, newStaffTableOrder } from "../../constants"
 
 type NewStaffTableModalProps = {
   isOpen: boolean
@@ -38,6 +38,7 @@ type NewStaffTable = {
 export const NewStaffTableModal: React.FC<NewStaffTableModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate()
   const { dispatch } = useContext(EmployeeContext)
+  const format = "YYYY-MM-DD"
   const [departments, setDepartments] = useState<{ id: string; name: string }[]>([])
   const [positions, setPositions] = useState<{ id: string; name: string }[]>([])
   const [document, setDocument] = useState<{ id: string; documentName: string }>({
@@ -57,6 +58,7 @@ export const NewStaffTableModal: React.FC<NewStaffTableModalProps> = ({ isOpen, 
     formState: { errors },
     register,
     getValues,
+    setValue,
   } = useForm<NewStaffTable>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -65,9 +67,13 @@ export const NewStaffTableModal: React.FC<NewStaffTableModalProps> = ({ isOpen, 
       rank: "",
       salary: "",
       departmentId: "",
-      staffDate: moment().format("MM/DD/YYYY"),
+      staffDate: "",
     }
   })
+
+  useEffect(() => {
+    setValue("staffDate", moment().format(formatDateForInput))
+  }, [])
 
   const formFieldProps = { errors, register }
 

@@ -22,7 +22,7 @@ import { Employee } from "../../models";
 import { initEmployee } from "../../mocks/initialModels/initEmployee"
 import axios from "axios"
 import moment from "moment/moment"
-import { changePositionOrder } from "../../constants"
+import { changePositionOrder, formatDateForInput } from "../../constants"
 
 type ChangePositionModalProps = {
   isOpen: boolean
@@ -60,6 +60,7 @@ export const ChangePositionModal: React.FC<ChangePositionModalProps> = ({ isOpen
     register,
     getValues,
     watch,
+    setValue,
   } = useForm<ChangePosition>({
     resolver: zodResolver(schema),
     mode: "all",
@@ -70,6 +71,10 @@ export const ChangePositionModal: React.FC<ChangePositionModalProps> = ({ isOpen
       orderDate: "",
     }
   })
+
+  useEffect(() => {
+    setValue("orderDate", moment().format(formatDateForInput))
+  }, [])
 
   const watchDepartment = watch("departmentId")
   const watchEmployee = watch("employeeId")

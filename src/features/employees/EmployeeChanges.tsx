@@ -115,7 +115,6 @@ export const EmployeeChanges = () => {
   })
 
   const watchDepartment = watch("department")
-  const watchMobPhone = watch("mobPhone")
   const isInvalid = !isDirty || !isValid
   const formFieldProps = { errors, register }
 
@@ -200,7 +199,6 @@ export const EmployeeChanges = () => {
   
   useEffect(() => {
     if (params.id && employee) {
-      const department = departments.find((item) => item.name === watchDepartment)
       setIsEdit(true)
       setValue("firstName", employee.firstName)
       setValue("surname", employee.surname)

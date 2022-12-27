@@ -1,4 +1,5 @@
 export const formatDate = "DD/MM/YYYY"
+export const formatDateForInput = "YYYY-MM-DD"
 
 export const newEmployeeOrder = (fio: string, department: string, position: string) => {
   return `Принят/а на работу новый/ая сотрудник/ца ${fio} в отдел ${department} на должность ${position}`
